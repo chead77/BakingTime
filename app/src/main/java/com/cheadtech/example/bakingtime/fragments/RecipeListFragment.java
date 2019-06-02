@@ -1,0 +1,86 @@
+package com.cheadtech.example.bakingtime.fragments;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.cheadtech.example.bakingtime.R;
+import com.cheadtech.example.bakingtime.activities.StepListActivity;
+import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
+import com.cheadtech.example.bakingtime.models.Recipe;
+import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
+
+import java.util.ArrayList;
+
+public class RecipeListFragment extends Fragment {
+    private RecyclerView recipeListRV;
+    private RecipeListViewModel viewModel;
+
+    public RecipeListFragment() {}
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.recipe_list_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+        recipeListRV = view.findViewById(R.id.recipe_list_rv);
+        if (recipeListRV != null) {
+            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<Recipe>(), new RecipeListAdapter.RecipeListAdapterCallback() {
+                @Override
+                public void onRecipeClicked(Recipe recipe) {
+                    Intent intent = new Intent(requireContext(), StepListActivity.class);
+                    intent.putExtra(getString(R.string.extra_recipe), recipe);
+                    startActivity(intent);
+                }
+            }));
+        }
+
+        viewModel.recipeListLiveData.observe(this, new Observer<ArrayList<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Recipe> recipes) {
+                if (recipes != null) {
+                    updateRecipeList(recipes);
+                } else {
+                    Toast.makeText(requireContext(), "Recipe list null", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        viewModel.init(new RecipeListViewModel.RecipeListViewModelCallback() {
+            @Override
+            public void onNetworkError() {
+                Toast.makeText(requireContext(), "NetworkError. Please try again.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateRecipeList(@NonNull ArrayList<Recipe> recipes) {
+        if (recipeListRV != null) {
+            RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
+            if (adapter != null) {
+                adapter.setData(recipes);
+            }
+        }
+    }
+}

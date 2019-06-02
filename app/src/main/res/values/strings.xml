@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Baking Time</string>
+    <string name="servings">Servings: %1$d</string>
+    <string name="ingredients_label">Ingredients</string>
+    <string name="recipe_thumbnail_content_description">Recipe thumbnail.</string>
+    <string name="extra_recipe" translatable="false">extra_recipe</string>
+    <string name="error_please_try_again">An error occurred. Please try again.</string>
+</resources>
