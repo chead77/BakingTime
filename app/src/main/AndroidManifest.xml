@@ -19,9 +19,12 @@
             </intent-filter>
         </activity>
 
-
         <activity android:name=".activities.StepListActivity"
             android:parentActivityName=".activities.RecipeListActivity"
+            />
+
+        <activity android:name=".activities.StepDetailActivity"
+            android:parentActivityName=".activities.StepListActivity"
             />
 
     </application>

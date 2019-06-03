@@ -1,5 +1,6 @@
 package com.cheadtech.example.bakingtime.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cheadtech.example.bakingtime.R;
+import com.cheadtech.example.bakingtime.activities.StepDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.StepListAdapter;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
@@ -73,11 +75,12 @@ public class StepListFragment extends Fragment {
     }
 
     private void populateSteps() {
-        stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), new StepListAdapter.StepListAdapterCallback() {
-            @Override
-            public void onStepClicked(Step step) {
-                Toast.makeText(requireContext(), "Clicked: " + step.id, Toast.LENGTH_SHORT).show();
-            }
+        stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), stepPosition -> {
+            // TODO - load step detail fragment if on a tablet???
+            Intent intent = new Intent(getContext(), StepDetailActivity.class);
+            intent.putExtra(getString(R.string.extra_recipe), recipe);
+            intent.putExtra(getString(R.string.extra_recipe_step), stepPosition);
+            startActivity(intent);
         }));
     }
 }

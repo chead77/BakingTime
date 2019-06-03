@@ -10,14 +10,14 @@ import androidx.core.app.NavUtils;
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.models.Recipe;
 
-public class StepListActivity extends AppCompatActivity {
+public class StepDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.step_list_activity);
+        setContentView(R.layout.step_detail_activity);
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey(getString(R.string.extra_recipe))) {
+        if (extras != null && extras.containsKey(getString(R.string.extra_recipe)) && extras.containsKey(getString(R.string.extra_recipe_step))) {
             Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
             if (recipe != null) {
                 setTitle(recipe.name);

@@ -5,4 +5,5 @@
     <string name="recipe_thumbnail_content_description">Recipe thumbnail.</string>
     <string name="extra_recipe" translatable="false">extra_recipe</string>
     <string name="error_please_try_again">An error occurred. Please try again.</string>
+    <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
 </resources>

@@ -2,7 +2,6 @@ package com.cheadtech.example.bakingtime.adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -28,7 +27,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder
     }
 
     public interface StepListAdapterCallback {
-        void onStepClicked(Step step);
+        void onStepClicked(Integer stepPosition);
     }
     private StepListAdapterCallback callback;
 
@@ -44,10 +43,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder
         if (holder.stepCard != null && holder.stepDescriptionTV != null) {
             final Step step = dataSet.get(holder.getAdapterPosition());
             holder.stepDescriptionTV.setText(step.shortDescription);
-            holder.stepCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) { callback.onStepClicked(step); }
-            });
+            holder.stepCard.setOnClickListener(view -> callback.onStepClicked(position));
         }
     }
 
