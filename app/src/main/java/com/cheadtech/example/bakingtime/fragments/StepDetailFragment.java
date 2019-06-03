@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ public class StepDetailFragment extends Fragment {
 
     private PlayerView playerView;
     private SimpleExoPlayer player;
+    private LinearLayout videoError;
+    private TextView videoErrorMessageTV;
 
     private TextView stepInstructionsTV;
 
@@ -75,7 +78,9 @@ public class StepDetailFragment extends Fragment {
 
         playerView = view.findViewById(R.id.video_player);
         stepInstructionsTV = view.findViewById(R.id.step_instruction_tv);
-        if (playerView == null || stepInstructionsTV == null) {
+        videoError = view.findViewById(R.id.video_error);
+        videoErrorMessageTV = view.findViewById(R.id.video_error_message_tv);
+        if (playerView == null || stepInstructionsTV == null || videoError == null || videoErrorMessageTV == null) {
             Log.e(tag, "One or more Views are null");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
             activity.finish();
@@ -117,13 +122,50 @@ public class StepDetailFragment extends Fragment {
                 Util.getUserAgent(requireContext(), getString(R.string.app_name)));
         Uri uri = Uri.parse(url);
         MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
-        player.prepare(videoSource);
         player.setPlayWhenReady(true);
         player.addListener(new Player.EventListener() {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Toast.makeText(requireContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                if (currentStep.videoURL.isEmpty())
+                    hidePlayer(getString(R.string.video_not_provided));
+                else
+                    hidePlayer(getString(R.string.video_playback_error));
             }
         });
+        showPlayer();
+        player.prepare(videoSource);
+    }
+
+    private void showPlayer() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        if (videoError == null || playerView == null) {
+            Log.e(tag, "showPlayer() - A View is null");
+            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            activity.finish();
+            return;
+        }
+
+        videoError.setVisibility(View.GONE);
+        playerView.setVisibility(View.VISIBLE);
+    }
+
+    private void hidePlayer(String errorMessage) {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        if (videoError == null || playerView == null || videoErrorMessageTV == null) {
+            Log.e(tag, "hidePlayer() - A View is null");
+            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            activity.finish();
+            return;
+        }
+
+        videoErrorMessageTV.setText(errorMessage);
+        videoError.setVisibility(View.VISIBLE);
+        playerView.setVisibility(View.GONE);
     }
 }

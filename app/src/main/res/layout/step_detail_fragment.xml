@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     >
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/video_player"
+    <FrameLayout
+        android:id="@+id/player_frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -16,7 +16,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/step_instruction"
-        />
+        >
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <LinearLayout
+            android:id="@+id/video_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_error_outline_black_80dp"
+                />
+
+            <TextView
+                android:id="@+id/video_error_message_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/black"
+                android:text="@string/video_not_provided"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/step_instruction"
@@ -27,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/video_player"
+        app:layout_constraintTop_toBottomOf="@id/player_frame"
         >
 
         <TextView
@@ -40,5 +75,7 @@
             />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <!-- TODO: add a navigation bar???  - hide it in tablet mode??? -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
