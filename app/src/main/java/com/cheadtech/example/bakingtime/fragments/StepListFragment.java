@@ -22,7 +22,6 @@ import com.cheadtech.example.bakingtime.activities.StepDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.StepListAdapter;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
-import com.cheadtech.example.bakingtime.models.Step;
 
 import java.util.ArrayList;
 import java.util.List;

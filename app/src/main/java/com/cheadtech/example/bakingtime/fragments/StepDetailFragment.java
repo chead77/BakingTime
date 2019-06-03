@@ -122,6 +122,7 @@ public class StepDetailFragment extends Fragment {
                 Util.getUserAgent(requireContext(), getString(R.string.app_name)));
         Uri uri = Uri.parse(url);
         MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        showPlayer();
         player.setPlayWhenReady(true);
         player.addListener(new Player.EventListener() {
             @Override
@@ -131,20 +132,15 @@ public class StepDetailFragment extends Fragment {
                 else
                     hidePlayer(getString(R.string.video_playback_error));
             }
+
         });
-        showPlayer();
         player.prepare(videoSource);
     }
 
     private void showPlayer() {
-        Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
         if (videoError == null || playerView == null) {
             Log.e(tag, "showPlayer() - A View is null");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            activity.finish();
             return;
         }
 
@@ -153,14 +149,9 @@ public class StepDetailFragment extends Fragment {
     }
 
     private void hidePlayer(String errorMessage) {
-        Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
         if (videoError == null || playerView == null || videoErrorMessageTV == null) {
             Log.e(tag, "hidePlayer() - A View is null");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            activity.finish();
             return;
         }
 
