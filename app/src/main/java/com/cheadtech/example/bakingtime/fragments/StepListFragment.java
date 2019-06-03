@@ -60,7 +60,7 @@ public class StepListFragment extends Fragment {
     }
 
     private void populateIngredients() {
-        SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder("");
+        SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder();
         List<Ingredient> ingredients = recipe.ingredients;
         for (Ingredient ingredient : ingredients) {
             SpannableStringBuilder builder = new SpannableStringBuilder(ingredient.quantity.toString())
@@ -70,7 +70,9 @@ public class StepListFragment extends Fragment {
             builder.setSpan(new BulletSpan(12, ingredientsTV.getCurrentTextColor()), 0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             ingredientsBuilder.append(builder);
         }
-        ingredientsTV.setText(ingredientsBuilder);
+
+        // trim off the trailing \n
+        ingredientsTV.setText(ingredientsBuilder.delete(ingredientsBuilder.length() - 1, ingredientsBuilder.length()));
     }
 
     private void populateSteps() {
