@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,6 +58,12 @@ public class StepListFragment extends Fragment {
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
+
+        // The top-level ScrollView starts out scrolled past the ingredient card. The following code corrects for this.
+        NestedScrollView scrollView = view.findViewById(R.id.step_list_scroller);
+        if (scrollView != null) {
+            scrollView.post(() -> scrollView.scrollTo(0, 0));
+        }
     }
 
     private void populateIngredients() {
@@ -71,7 +78,7 @@ public class StepListFragment extends Fragment {
             ingredientsBuilder.append(builder);
         }
 
-        // trim off the trailing \n
+        // trim off the trailing new line character
         ingredientsTV.setText(ingredientsBuilder.delete(ingredientsBuilder.length() - 1, ingredientsBuilder.length()));
     }
 
