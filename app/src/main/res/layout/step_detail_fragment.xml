@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintVertical_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -59,9 +60,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:cardCornerRadius="5dp"
+        app:layout_constraintVertical_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/step_navigation"
         app:layout_constraintTop_toBottomOf="@id/player_frame"
         >
 
@@ -76,6 +78,22 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- TODO: add a navigation bar???  - hide it in tablet mode??? -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/step_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:itemIconTint="@color/step_detail_bottom_navigation_colors"
+        app:itemTextColor="@color/step_detail_bottom_navigation_colors"
+        app:menu="@menu/step_detail_bottom_navigation_menu"
+        app:layout_constraintVertical_weight="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_instruction"
+        >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
