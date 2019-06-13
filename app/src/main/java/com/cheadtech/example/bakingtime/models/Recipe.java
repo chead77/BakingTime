@@ -4,13 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Recipe implements Parcelable {
     public Recipe() {}
 
-    public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
+    public Recipe(int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps, int servings, String image) {
         this.id=id;
         this.name=name;
         this.ingredients=ingredients;
@@ -21,8 +20,8 @@ public class Recipe implements Parcelable {
 
     public Integer id;
     public String name;
-    public List<Ingredient> ingredients;
-    public List<Step> steps;
+    public ArrayList<Ingredient> ingredients;
+    public ArrayList<Step> steps;
     public Integer servings;
     public String image;
 

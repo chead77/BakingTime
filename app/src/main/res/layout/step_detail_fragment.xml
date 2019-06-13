@@ -7,56 +7,62 @@
     android:layout_height="match_parent"
     >
 
-    <FrameLayout
-        android:id="@+id/player_frame"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/step_instruction"
-        >
+    <!--<FrameLayout-->
+        <!--android:id="@+id/player_frame"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintVertical_weight="1"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/step_instruction"-->
+        <!--&gt;-->
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/video_player"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            app:surface_type="surface_view"
+            app:layout_constraintVertical_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/step_instruction"
             />
 
-        <LinearLayout
-            android:id="@+id/video_error"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+        <!--<LinearLayout-->
+            <!--android:id="@+id/video_error"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--&gt;-->
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_error_outline_black_80dp"
-                />
+            <!--<androidx.appcompat.widget.AppCompatImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--app:srcCompat="@drawable/ic_error_outline_black_80dp"-->
+                <!--/>-->
 
-            <TextView
-                android:id="@+id/video_error_message_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/black"
-                android:text="@string/video_not_provided"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                />
+            <!--<TextView-->
+                <!--android:id="@+id/video_error_message_tv"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="24dp"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:textColor="@android:color/black"-->
+                <!--android:text="@string/video_not_provided"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+                <!--/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
-    </FrameLayout>
+    <!--</FrameLayout>-->
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/step_instruction"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:cardCornerRadius="5dp"
@@ -64,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/step_navigation"
-        app:layout_constraintTop_toBottomOf="@id/player_frame"
+        app:layout_constraintTop_toBottomOf="@id/video_player"
         >
 
         <TextView
@@ -77,6 +83,17 @@
             />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <!--<com.google.android.exoplayer2.ui.PlayerControlView-->
+        <!--android:id="@+id/player_control_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/step_instruction"-->
+        <!--/>-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/step_navigation"
@@ -92,8 +109,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/step_instruction"
-        >
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
