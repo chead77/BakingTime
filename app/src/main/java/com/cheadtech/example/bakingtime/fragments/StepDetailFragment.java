@@ -107,7 +107,8 @@ public class StepDetailFragment extends Fragment {
         mediaStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(PlaybackStateCompat.ACTION_PLAY |
                         PlaybackStateCompat.ACTION_PAUSE |
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
         mediaSession.setPlaybackState(mediaStateBuilder.build());
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
@@ -120,6 +121,12 @@ public class StepDetailFragment extends Fragment {
             public void onPause() {
                 if (player !=null)
                     player.setPlayWhenReady(false);
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                if (player != null)
+                    player.seekTo(0);
             }
         });
         mediaSession.setActive(true);

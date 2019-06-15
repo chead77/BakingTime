@@ -5,7 +5,13 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cheadtech.example.bakingtime.database.BakingTimeDB;
+import com.cheadtech.example.bakingtime.database.Ingredients;
+import com.cheadtech.example.bakingtime.database.Recipes;
+import com.cheadtech.example.bakingtime.database.Steps;
+import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
+import com.cheadtech.example.bakingtime.models.Step;
 import com.cheadtech.example.bakingtime.network.RecipeService;
 import com.cheadtech.example.bakingtime.network.ServiceLocator;
 
@@ -18,14 +24,18 @@ import retrofit2.Response;
 public class RecipeListViewModel extends ViewModel {
     private final String tag = getClass().toString();
 
+    private BakingTimeDB db;
+
     public MutableLiveData<ArrayList<Recipe>> recipeListLiveData = new MutableLiveData<>();
 
     public interface RecipeListViewModelCallback {
         void onNetworkError();
+        void onDBError();
     }
     private RecipeListViewModelCallback callback;
 
-    public void init(RecipeListViewModelCallback callback) {
+    public void init(BakingTimeDB dbInstance, RecipeListViewModelCallback callback) {
+        this.db = dbInstance;
         this.callback = callback;
         refreshRecipeList();
     }
@@ -36,8 +46,10 @@ public class RecipeListViewModel extends ViewModel {
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                 if (response.code() == 200) {
-                    if (response.body() != null) {
-                        recipeListLiveData.postValue(response.body());
+                    ArrayList<Recipe> responseBody = response.body();
+                    if (responseBody != null) {
+                        refreshDB(responseBody);
+                        recipeListLiveData.postValue(responseBody);
                         return;
                     } else {
                         Log.e(tag, " - Network response successful, but a null response was received.");
@@ -56,5 +68,57 @@ public class RecipeListViewModel extends ViewModel {
                 callback.onNetworkError();
             }
         });
+    }
+
+    private void refreshDB(ArrayList<Recipe> recipes) {
+        new Thread(() -> {
+            try {
+                // clear out the recipes, ingredients, and steps table and repopulate with new data.
+                db.recipesDao().delete(db.recipesDao().getAllRecipes());
+                db.ingredientsDao().delete(db.ingredientsDao().getAllIngredients());
+                db.stepsDao().delete(db.stepsDao().getAllSteps());
+
+                ArrayList<Recipes> newRecipes = new ArrayList<>();
+                ArrayList<Ingredients> newIngredients = new ArrayList<>();
+                ArrayList<Steps> newSteps = new ArrayList<>();
+
+                for (Recipe recipe : recipes) {
+                    Recipes newRecipe = new Recipes();
+                    newRecipe.id = recipe.id;
+                    newRecipe.name = recipe.name;
+                    newRecipe.servings = recipe.servings;
+                    newRecipe.image = recipe.image;
+                    newRecipes.add(newRecipe);
+
+                    for (Ingredient ingredient : recipe.ingredients) {
+                        Ingredients newIngredient = new Ingredients();
+                        newIngredient.recipeId = recipe.id;
+                        newIngredient.quantity = ingredient.quantity;
+                        newIngredient.measure = ingredient.measure;
+                        newIngredient.ingredient = ingredient.ingredient;
+                        newIngredients.add(newIngredient);
+                    }
+
+                    for (Step step : recipe.steps) {
+                        Steps newStep = new Steps();
+                        newStep.recipeId = recipe.id;
+                        newStep.stepId = step.id;
+                        newStep.shortDescription = step.shortDescription;
+                        newStep.description = step.description;
+                        newStep.thumbnailUrl = step.thumbnailURL;
+                        newStep.videoUrl = step.videoURL;
+                        newSteps.add(newStep);
+                    }
+                }
+                Recipes[] recipesArray = newRecipes.toArray(new Recipes[0]);
+                db.recipesDao().insertAll(recipesArray);
+                db.ingredientsDao().insertAll(newIngredients.toArray(new Ingredients[0]));
+                db.stepsDao().insertAll(newSteps.toArray(new Steps[0]));
+            } catch (Exception e) {
+                Log.e(tag, e.getMessage());
+                callback.onDBError();
+            }
+            Log.d(tag, "Hello!!!");
+        }).start();
     }
 }

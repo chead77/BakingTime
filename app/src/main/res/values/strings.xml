@@ -3,11 +3,18 @@
     <string name="servings">Servings: %1$d</string>
     <string name="ingredients_label">Ingredients</string>
     <string name="recipe_thumbnail_content_description">Recipe thumbnail.</string>
-    <string name="extra_recipe" translatable="false">extra_recipe</string>
     <string name="error_please_try_again">An error occurred. Please try again.</string>
-    <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
     <string name="video_playback_error">Error playing video.\nPlease try again.</string>
     <string name="video_not_provided">A video is not available for this step.</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+    <!--TODO - the following string should be removed before completion-->
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <string name="extra_recipe" translatable="false">extra_recipe</string>
+    <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
+    <string name="app_db_name" translatable="false">baking_time_db</string>
+    <string name="error_network">Network Error. Please try again.</string>
+    <string name="error_database">Database Error. Please try again.</string>
 </resources>

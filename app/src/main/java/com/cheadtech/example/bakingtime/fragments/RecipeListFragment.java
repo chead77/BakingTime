@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.StepListActivity;
 import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
+import com.cheadtech.example.bakingtime.database.DatabaseLoader;
 import com.cheadtech.example.bakingtime.models.Recipe;
 import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
 
@@ -67,10 +68,15 @@ public class RecipeListFragment extends Fragment {
     }
 
     private void initViewModel() {
-        viewModel.init(new RecipeListViewModel.RecipeListViewModelCallback() {
+        viewModel.init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
             @Override
             public void onNetworkError() {
-                Toast.makeText(requireContext(), "NetworkError. Please try again.", Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDBError() {
+                Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
             }
         });
     }
