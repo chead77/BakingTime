@@ -17,8 +17,8 @@ public class StepDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.step_detail_activity);
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey(getString(R.string.extra_recipe)) && extras.containsKey(getString(R.string.extra_recipe_step))) {
-            Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
+        if (extras != null && extras.containsKey(getString(R.string.extra_recipe_id)) && extras.containsKey(getString(R.string.extra_recipe_step))) {
+            Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe_id));
             if (recipe != null) {
                 setTitle(recipe.name);
             } else {

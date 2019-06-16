@@ -17,8 +17,8 @@ public class StepListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.step_list_activity);
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey(getString(R.string.extra_recipe))) {
-            Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
+        if (extras != null && extras.containsKey(getString(R.string.extra_recipe_id))) {
+            Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe_id)); // TODO - this has changed to be the ID
             if (recipe != null) {
                 setTitle(recipe.name);
             } else {

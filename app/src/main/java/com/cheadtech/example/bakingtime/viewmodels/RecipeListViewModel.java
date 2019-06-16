@@ -2,7 +2,6 @@ package com.cheadtech.example.bakingtime.viewmodels;
 
 import android.util.Log;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cheadtech.example.bakingtime.database.BakingTimeDB;
@@ -26,8 +25,6 @@ public class RecipeListViewModel extends ViewModel {
 
     private BakingTimeDB db;
 
-    public MutableLiveData<ArrayList<Recipe>> recipeListLiveData = new MutableLiveData<>();
-
     public interface RecipeListViewModelCallback {
         void onNetworkError();
         void onDBError();
@@ -49,7 +46,6 @@ public class RecipeListViewModel extends ViewModel {
                     ArrayList<Recipe> responseBody = response.body();
                     if (responseBody != null) {
                         refreshDB(responseBody);
-                        recipeListLiveData.postValue(responseBody);
                         return;
                     } else {
                         Log.e(tag, " - Network response successful, but a null response was received.");
@@ -110,15 +106,13 @@ public class RecipeListViewModel extends ViewModel {
                         newSteps.add(newStep);
                     }
                 }
-                Recipes[] recipesArray = newRecipes.toArray(new Recipes[0]);
-                db.recipesDao().insertAll(recipesArray);
-                db.ingredientsDao().insertAll(newIngredients.toArray(new Ingredients[0]));
-                db.stepsDao().insertAll(newSteps.toArray(new Steps[0]));
+                db.recipesDao().insertAll(newRecipes);
+                db.ingredientsDao().insertAll(newIngredients);
+                db.stepsDao().insertAll(newSteps);
             } catch (Exception e) {
                 Log.e(tag, e.getMessage());
                 callback.onDBError();
             }
-            Log.d(tag, "Hello!!!");
         }).start();
     }
 }

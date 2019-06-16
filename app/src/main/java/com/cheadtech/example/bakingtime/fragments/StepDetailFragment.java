@@ -77,15 +77,15 @@ public class StepDetailFragment extends Fragment {
         }
 
         Bundle extras = activity.getIntent().getExtras();
-        if (extras == null || !extras.containsKey(getString(R.string.extra_recipe)) || !extras.containsKey(getString(R.string.extra_recipe_step))) {
+        if (extras == null || !extras.containsKey(getString(R.string.extra_recipe_id)) || !extras.containsKey(getString(R.string.extra_recipe_step))) {
             Log.e(tag, "Error loading data from extras bundle");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
             activity.finish();
             return;
         }
 
-        if (extras.getParcelable(getString(R.string.extra_recipe)) instanceof Recipe)
-            recipe = extras.getParcelable(getString(R.string.extra_recipe));
+        if (extras.getParcelable(getString(R.string.extra_recipe_id)) instanceof Recipe)
+            recipe = extras.getParcelable(getString(R.string.extra_recipe_id));
         currentRecipeStepPosition = extras.getInt(getString(R.string.extra_recipe_step), -1);
         if (recipe == null || currentRecipeStepPosition == -1) {
             Log.e(tag, "Recipe or currentRecipeStepPosition not found in intent Extras");

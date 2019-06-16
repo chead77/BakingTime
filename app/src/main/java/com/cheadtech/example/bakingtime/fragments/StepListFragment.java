@@ -45,8 +45,8 @@ public class StepListFragment extends Fragment {
         FragmentActivity activity = getActivity();
         if (activity != null) {
             Bundle extras = activity.getIntent().getExtras();
-            if (extras != null && extras.containsKey(getString(R.string.extra_recipe)))
-                recipe = extras.getParcelable(getString(R.string.extra_recipe));
+            if (extras != null && extras.containsKey(getString(R.string.extra_recipe_id)))
+                recipe = extras.getParcelable(getString(R.string.extra_recipe_id));
         }
         ingredientsTV = view.findViewById(R.id.ingredients_tv);
         stepsRV = view.findViewById(R.id.steps_rv);
@@ -86,7 +86,7 @@ public class StepListFragment extends Fragment {
         stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), stepPosition -> {
             // TODO - load step detail fragment if on a tablet???
             Intent intent = new Intent(getContext(), StepDetailActivity.class);
-            intent.putExtra(getString(R.string.extra_recipe), recipe);
+            intent.putExtra(getString(R.string.extra_recipe_id), recipe);
             intent.putExtra(getString(R.string.extra_recipe_step), stepPosition);
             startActivity(intent);
         }));

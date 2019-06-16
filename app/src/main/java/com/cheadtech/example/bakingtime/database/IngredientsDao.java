@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -16,7 +17,7 @@ public interface IngredientsDao {
     List<Ingredients> getAllIngredientsForRecipe(Integer recipeId);
 
     @Insert
-    void insertAll(Ingredients... ingredients);
+    void insertAll(ArrayList<Ingredients> ingredients);
 
     @Delete
     void delete(List<Ingredients> ingredient);

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,10 +17,11 @@ import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.StepListActivity;
 import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
-import com.cheadtech.example.bakingtime.models.Recipe;
+import com.cheadtech.example.bakingtime.database.Recipes;
 import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeListFragment extends Fragment {
     private RecyclerView recipeListRV;
@@ -43,26 +43,21 @@ public class RecipeListFragment extends Fragment {
 
         recipeListRV = view.findViewById(R.id.recipe_list_rv);
         if (recipeListRV != null) {
-            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<Recipe>(), new RecipeListAdapter.RecipeListAdapterCallback() {
-                @Override
-                public void onRecipeClicked(Recipe recipe) {
-                    Intent intent = new Intent(requireContext(), StepListActivity.class);
-                    intent.putExtra(getString(R.string.extra_recipe), recipe);
-                    startActivity(intent);
-                }
+            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe -> {
+                Intent intent = new Intent(requireContext(), StepListActivity.class);
+                intent.putExtra(getString(R.string.extra_recipe_id), recipe);
+                startActivity(intent);
             }));
         }
 
-        viewModel.recipeListLiveData.observe(this, new Observer<ArrayList<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<Recipe> recipes) {
-                if (recipes != null) {
-                    updateRecipeList(recipes);
-                } else {
-                    Toast.makeText(requireContext(), "Recipe list null", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        DatabaseLoader.getDbInstance(getContext()).recipesDao().getAllRecipesLiveData().observe(this, this::updateRecipeList);
+//        viewModel.recipeListLiveData.observe(this, recipes -> {
+//            if (recipes != null) {
+//                updateRecipeList(recipes);
+//            } else {
+//                Toast.makeText(requireContext(), "Recipe list null", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         initViewModel();
     }
@@ -81,11 +76,11 @@ public class RecipeListFragment extends Fragment {
         });
     }
 
-    private void updateRecipeList(@NonNull ArrayList<Recipe> recipes) {
+    private void updateRecipeList(@NonNull List<Recipes> recipes) {
         if (recipeListRV != null) {
             RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
             if (adapter != null) {
-                adapter.setData(recipes);
+                adapter.setData(new ArrayList<>(recipes));
             }
         }
     }
