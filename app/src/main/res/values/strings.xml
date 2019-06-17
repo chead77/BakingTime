@@ -10,7 +10,6 @@
     <string name="previous_step">Previous Step</string>
     <!--TODO - the following string should be removed before completion-->
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 
     <string name="extra_recipe_id" translatable="false">extra_recipe_id</string>
     <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
