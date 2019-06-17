@@ -12,6 +12,7 @@
     <string name="appwidget_text">EXAMPLE</string>
 
     <string name="extra_recipe_id" translatable="false">extra_recipe_id</string>
+    <string name="extra_recipe" translatable="false">extra_recipe</string>
     <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
     <string name="app_db_name" translatable="false">baking_time_db</string>
     <string name="error_network">Network Error. Please try again.</string>

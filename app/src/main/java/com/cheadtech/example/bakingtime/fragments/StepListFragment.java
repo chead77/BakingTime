@@ -105,7 +105,7 @@ public class StepListFragment extends Fragment {
         stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), stepPosition -> {
             // TODO - load step detail fragment if on a tablet???
             Intent intent = new Intent(getContext(), StepDetailActivity.class);
-            intent.putExtra(getString(R.string.extra_recipe_id), recipe);
+            intent.putExtra(getString(R.string.extra_recipe), recipe);
             intent.putExtra(getString(R.string.extra_recipe_step), stepPosition);
             startActivity(intent);
         }));
