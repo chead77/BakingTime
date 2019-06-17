@@ -24,7 +24,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/thumbnail_iv"
+            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
             app:layout_constraintHorizontal_weight="0"
             />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name_tv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/thumbnail_iv"
+            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
             />
 
         <TextView
@@ -43,12 +43,12 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/servings_tv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/thumbnail_iv"
+            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
             android:layout_marginTop="4dp"
             />
 
         <ImageView
-            android:id="@+id/thumbnail_iv"
+            android:id="@+id/recipe_image_iv"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:contentDescription="@string/recipe_thumbnail_content_description"

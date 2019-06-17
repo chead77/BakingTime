@@ -25,7 +25,6 @@ import java.util.List;
 
 public class RecipeListFragment extends Fragment {
     private RecyclerView recipeListRV;
-    private RecipeListViewModel viewModel;
 
     public RecipeListFragment() {}
 
@@ -39,41 +38,18 @@ public class RecipeListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
-
         recipeListRV = view.findViewById(R.id.recipe_list_rv);
-        if (recipeListRV != null) {
-            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe -> {
-                Intent intent = new Intent(requireContext(), StepListActivity.class);
-                intent.putExtra(getString(R.string.extra_recipe_id), recipe);
-                startActivity(intent);
-            }));
-        }
-
-        DatabaseLoader.getDbInstance(getContext()).recipesDao().getAllRecipesLiveData().observe(this, this::updateRecipeList);
-//        viewModel.recipeListLiveData.observe(this, recipes -> {
-//            if (recipes != null) {
-//                updateRecipeList(recipes);
-//            } else {
-//                Toast.makeText(requireContext(), "Recipe list null", Toast.LENGTH_LONG).show();
-//            }
-//        });
+        if (recipeListRV != null)
+            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipeId ->
+                    startActivity(new Intent(requireContext(), StepListActivity.class)
+                            .putExtra(getString(R.string.extra_recipe_id), recipeId))));
 
         initViewModel();
-    }
 
-    private void initViewModel() {
-        viewModel.init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
-            @Override
-            public void onNetworkError() {
-                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onDBError() {
-                Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
-            }
-        });
+        DatabaseLoader.getDbInstance(getContext())
+                .recipesDao()
+                .getAllRecipesLiveData()
+                .observe(this, this::updateRecipeList);
     }
 
     private void updateRecipeList(@NonNull List<Recipes> recipes) {
@@ -83,5 +59,20 @@ public class RecipeListFragment extends Fragment {
                 adapter.setData(new ArrayList<>(recipes));
             }
         }
+    }
+
+    private void initViewModel() {
+        ViewModelProviders.of(this).get(RecipeListViewModel.class)
+                .init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
+                    @Override
+                    public void onNetworkError() {
+                        Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onDBError() {
+                        Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

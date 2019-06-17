@@ -15,12 +15,12 @@ public class RecipeListItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         nameTV = itemView.findViewById(R.id.name_tv);
         servingsTV = itemView.findViewById(R.id.servings_tv);
-        thumbnailTV = itemView.findViewById(R.id.thumbnail_iv);
+        imageIV = itemView.findViewById(R.id.recipe_image_iv);
         recipeCard = itemView.findViewById(R.id.recipe_card);
     }
 
     public MaterialCardView recipeCard;
     public TextView nameTV;
     public TextView servingsTV;
-    public ImageView thumbnailTV;
+    public ImageView imageIV;
 }

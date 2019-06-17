@@ -42,16 +42,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final RecipeListItemViewHolder holder, int position) {
-        if (holder.recipeCard != null && holder.nameTV != null && holder.servingsTV != null && holder.thumbnailTV != null) {
+        if (holder.recipeCard != null && holder.nameTV != null && holder.servingsTV != null && holder.imageIV != null) {
             final Recipes recipe = dataSet.get(holder.getAdapterPosition());
             holder.nameTV.setText(recipe.name);
             holder.servingsTV.setText(holder.servingsTV.getContext().getString(R.string.servings, recipe.servings));
-            Glide.with(holder.thumbnailTV.getContext())
+            Glide.with(holder.imageIV.getContext())
                     .load(recipe.image)
                     .centerCrop()
                     .placeholder(R.drawable.ic_android_black_80dp)
                     .error(R.drawable.ic_android_black_80dp)
-                    .into(holder.thumbnailTV);
+                    .into(holder.imageIV);
             holder.recipeCard.setOnClickListener(view -> callback.onRecipeClicked(recipe.id));
         }
     }
