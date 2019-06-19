@@ -1,6 +1,5 @@
 package com.cheadtech.example.bakingtime.fragments;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -30,11 +29,8 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
 
 public class StepDetailFragment extends Fragment {
     private final String tag = getClass().toString();
@@ -61,35 +57,39 @@ public class StepDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Activity activity = getActivity();
+        if (getActivity() == null) {
+            Log.e(tag, "Activity is null");
+            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         playerView = view.findViewById(R.id.video_player);
         stepInstructionsTV = view.findViewById(R.id.step_instruction_tv);
         videoError = view.findViewById(R.id.video_error);
         videoErrorMessageTV = view.findViewById(R.id.video_error_message_tv);
         bottomNavigationView = view.findViewById(R.id.step_navigation);
-        if (activity == null || playerView == null || stepInstructionsTV == null || bottomNavigationView == null ||
+        if (playerView == null || stepInstructionsTV == null || bottomNavigationView == null ||
                 videoErrorMessageTV == null || videoError == null) {
-            Log.e(tag, "NULL Activity or View");
+            Log.e(tag, "One or more views is null");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            if (activity != null)
-                activity.finish();
+            getActivity().finish();
             return;
         }
 
-        Bundle extras = activity.getIntent().getExtras();
+        Bundle extras = getActivity().getIntent().getExtras();
         if (extras == null) {
             Log.e(tag, "Error loading data from extras bundle");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            activity.finish();
+            getActivity().finish();
             return;
         }
 
-        if (extras.getParcelable(getString(R.string.extra_recipe)) instanceof Recipe)
-            recipe = extras.getParcelable(getString(R.string.extra_recipe));
+        recipe = extras.getParcelable(getString(R.string.extra_recipe));
         currentRecipeStepPosition = extras.getInt(getString(R.string.extra_recipe_step), -1);
         if (recipe == null || currentRecipeStepPosition == -1) {
-            Log.e(tag, "Recipe or currentRecipeStepPosition not found in intent Extras");
+            Log.e(tag, "Recipe or current recipe step position not found in intent Extras");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            getActivity().finish();
             return;
         }
 
@@ -112,22 +112,13 @@ public class StepDetailFragment extends Fragment {
         mediaSession.setPlaybackState(mediaStateBuilder.build());
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
-            public void onPlay() {
-                if (player !=null)
-                    player.setPlayWhenReady(true);
-            }
+            public void onPlay() { if (player !=null) player.setPlayWhenReady(true); }
 
             @Override
-            public void onPause() {
-                if (player !=null)
-                    player.setPlayWhenReady(false);
-            }
+            public void onPause() { if (player !=null) player.setPlayWhenReady(false); }
 
             @Override
-            public void onSkipToPrevious() {
-                if (player != null)
-                    player.seekTo(0);
-            }
+            public void onSkipToPrevious() { if (player != null) player.seekTo(0); }
         });
         mediaSession.setActive(true);
     }
@@ -211,22 +202,11 @@ public class StepDetailFragment extends Fragment {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-                    IOException cause = error.getSourceException();
-                    if (cause instanceof FileDataSource.FileDataSourceException) {
-                        FileDataSource.FileDataSourceException sourceError = (FileDataSource.FileDataSourceException) cause;
-                        Log.e(tag, sourceError.getMessage());
-                        Activity activity = getActivity();
-                        if (activity != null)
-                            hidePlayer(getString(R.string.video_not_provided));
-                    } else {
-                        // Other causes can be checked for here. For this exercise, no further tests will be made.
-                        hidePlayer(getString(R.string.video_playback_error));
-                    }
-                } else {
-                    // Other causes can be checked for here. For this exercise, no further tests will be made.
+                Log.e(tag, error.getSourceException().getMessage());
+                if (error.type == ExoPlaybackException.TYPE_SOURCE)
+                    hidePlayer(getString(R.string.video_not_provided));
+                else
                     hidePlayer(getString(R.string.video_playback_error));
-                }
             }
         });
         player.prepare(videoSource);
