@@ -23,12 +23,12 @@ public class StepListViewModel extends ViewModel {
 
     public MutableLiveData<Recipe> recipeLiveData = new MutableLiveData<>();
 
-    public interface StepDetailViewModelCallback {
+    public interface StepListViewModelCallback {
         void onDBError();
     }
-    private StepDetailViewModelCallback callback;
+    private StepListViewModelCallback callback;
 
-    public void init(@NonNull BakingTimeDB db, int recipeId, StepDetailViewModelCallback callback) {
+    public void init(@NonNull BakingTimeDB db, int recipeId, StepListViewModelCallback callback) {
         this.db = db;
         this.recipeId = recipeId;
         this.callback = callback;
