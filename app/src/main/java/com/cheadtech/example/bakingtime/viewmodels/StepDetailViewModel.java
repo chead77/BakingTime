@@ -5,8 +5,10 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cheadtech.example.bakingtime.models.Recipe;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Player;
@@ -28,25 +30,40 @@ public class StepDetailViewModel extends ViewModel {
     private long currentPlayerPosition = 0;
     private boolean onPausePlayWhenReady = true;
 
-    public void pausePlayback(boolean playWhenReady) {
-        if (player != null) {
-            onPausePlayWhenReady = playWhenReady;
-            currentPlayerPosition = player.getCurrentPosition();
-            player.setPlayWhenReady(false);
-        }
-    }
+    private Recipe recipe;
+    private Integer currentRecipeStepPosition = -1;
+
+    public final MutableLiveData<String> videoUrlLiveData = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> previousEnabledLiveData = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> nextEnabledLiveData = new MutableLiveData<>();
+    public final MutableLiveData<String> descriptionLiveData = new MutableLiveData<>();
 
     public interface StepDetailViewModelCallback {
         void onMediaError(int errorId);
-        void onShowPlayer();
     }
     private StepDetailViewModelCallback callback;
 
-    public void init(@NonNull SimpleExoPlayer player, @NonNull MediaSessionCompat mediaSession, @NonNull ProgressiveMediaSource mediaSource, @NonNull StepDetailViewModelCallback callback) {
+    public void init(
+            @NonNull Recipe recipe,
+            int currentRecipeStepPosition,
+            @NonNull SimpleExoPlayer player,
+            @NonNull MediaSessionCompat mediaSession,
+            @NonNull StepDetailViewModelCallback callback) {
+        this.recipe = recipe;
+        if (this.currentRecipeStepPosition == -1)
+            this.currentRecipeStepPosition = currentRecipeStepPosition;
+        refreshUIFields();
+
         this.player = player;
         this.callback = callback;
         initMediaSession(mediaSession);
-        initPlayer(mediaSource);
+    }
+
+    private void refreshUIFields() {
+        videoUrlLiveData.postValue(recipe.steps.get(currentRecipeStepPosition).videoURL);
+        previousEnabledLiveData.postValue(currentRecipeStepPosition > 0);
+        nextEnabledLiveData.postValue(currentRecipeStepPosition < recipe.steps.size() - 1);
+        descriptionLiveData.postValue(recipe.steps.get(currentRecipeStepPosition).description);
     }
 
     private void initMediaSession(MediaSessionCompat newMediaSession) {
@@ -74,10 +91,9 @@ public class StepDetailViewModel extends ViewModel {
         mediaSession.setActive(true);
     }
 
-    private void initPlayer(ProgressiveMediaSource mediaSource) {
-        player.prepare(mediaSource);
+    public void setMediaSource(@NonNull ProgressiveMediaSource mediaSource) {
         player.setPlayWhenReady(false);
-        callback.onShowPlayer();
+        player.prepare(mediaSource);
         player.seekTo(currentPlayerPosition);
         player.setPlayWhenReady(onPausePlayWhenReady);
         player.addListener(new Player.EventListener() {
@@ -104,7 +120,7 @@ public class StepDetailViewModel extends ViewModel {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Log.e(tag, error.getSourceException().getMessage());
+                Log.w(tag, error.getSourceException().getMessage());
                 if (error.type == ExoPlaybackException.TYPE_SOURCE)
                     callback.onMediaError(VIDEO_NOT_PROVIDED);
                 else
@@ -113,10 +129,21 @@ public class StepDetailViewModel extends ViewModel {
         });
     }
 
-    public void changeVideoSource(ProgressiveMediaSource mediaSource) {
+    public void pausePlayback(boolean playWhenReady) {
         if (player != null) {
-            player.prepare(mediaSource);
-            player.setPlayWhenReady(true);
+            onPausePlayWhenReady = playWhenReady;
+            currentPlayerPosition = player.getCurrentPosition();// TODO might be able to move this to onPlayerStateChanged below, just after the if tree
+            player.setPlayWhenReady(false);
         }
+    }
+
+    public void nextStep() {
+        currentRecipeStepPosition++;
+        refreshUIFields();
+    }
+
+    public void previousStep() {
+        currentRecipeStepPosition--;
+        refreshUIFields();
     }
 }

@@ -32,9 +32,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class StepDetailFragment extends Fragment {
     private final String tag = getClass().toString();
 
-    private Recipe recipe;
-    private Integer currentRecipeStepPosition = 0;
-
     private PlayerView playerView;
     private TextView stepInstructionsTV;
     private BottomNavigationView bottomNavigationView;
@@ -72,8 +69,8 @@ public class StepDetailFragment extends Fragment {
             return;
         }
 
-        recipe = extras.getParcelable(getString(R.string.extra_recipe));
-        currentRecipeStepPosition = extras.getInt(getString(R.string.extra_recipe_step), -1);
+        Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
+        int currentRecipeStepPosition = extras.getInt(getString(R.string.extra_recipe_step), -1);
         if (recipe == null || currentRecipeStepPosition == -1) {
             Log.e(tag, "Recipe or current recipe step position not found in intent Extras");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
@@ -82,37 +79,51 @@ public class StepDetailFragment extends Fragment {
         }
 
         viewModel = ViewModelProviders.of(this).get(StepDetailViewModel.class);
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(requireContext(), new DefaultTrackSelector(), new DefaultLoadControl());
-        playerView.setPlayer(player);
-        viewModel.init(
-                player,
-                new MediaSessionCompat(requireContext(), getString(R.string.app_name)),
-                new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(
-                        requireContext(),
-                        Util.getUserAgent(requireContext(), getString(R.string.app_name))
-                )).createMediaSource(Uri.parse(recipe.steps.get(currentRecipeStepPosition).videoURL)),
-                new StepDetailViewModel.StepDetailViewModelCallback() {
-                    @Override
-                    public void onMediaError(int errorId) {
-                        switch (errorId) {
-                            case StepDetailViewModel.VIDEO_NOT_PROVIDED:
-                                hidePlayer(getString(R.string.video_not_provided));
-                                break;
-                            case StepDetailViewModel.VIDEO_PLAYBACK_ERROR:
-                                hidePlayer(getString(R.string.video_playback_error));
-                                break;
-                            default:
-                                hidePlayer(getString(R.string.video_playback_error));
-                        }
-                    }
+        viewModel.videoUrlLiveData.observe(this, this::setMediaSource);
+        viewModel.previousEnabledLiveData.observe(this, this::setNavigationPreviousEnabled);
+        viewModel.nextEnabledLiveData.observe(this, this::setNavigationNextEnabled);
+        viewModel.descriptionLiveData.observe(this, this::setDescription);
 
-                    @Override
-                    public void onShowPlayer() { showPlayer(); }
-                });
+        playerView.setPlayer(ExoPlayerFactory.newSimpleInstance(requireContext(), new DefaultTrackSelector(), new DefaultLoadControl()));
+
+        viewModel.init(
+                recipe,
+                currentRecipeStepPosition,
+                (SimpleExoPlayer) playerView.getPlayer(),
+                new MediaSessionCompat(requireContext(), getString(R.string.app_name)),
+                this::onPlayerError);
 
         setupStepNavigation();
         if (stepInstructionsTV != null)
             stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
+    }
+
+    private void setMediaSource(String videoUrl) {
+        showPlayer();
+        viewModel.setMediaSource(new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(
+                requireContext(),
+                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+                .createMediaSource(Uri.parse(videoUrl)));
+    }
+
+    private void setDescription(String description) {
+        if (stepInstructionsTV != null)
+            stepInstructionsTV.setText(description);
+    }
+
+    private void onPlayerError(int errorId) {
+        // make sure a context exists, in case the fragment has been dismissed before the player errors out
+        if (getContext() != null)
+            switch (errorId) {
+                case StepDetailViewModel.VIDEO_NOT_PROVIDED:
+                    hidePlayer(getString(R.string.video_not_provided));
+                    break;
+                case StepDetailViewModel.VIDEO_PLAYBACK_ERROR:
+                    hidePlayer(getString(R.string.video_playback_error));
+                    break;
+                default:
+                    hidePlayer(getString(R.string.video_playback_error));
+            }
     }
 
     @Override
@@ -138,29 +149,23 @@ public class StepDetailFragment extends Fragment {
 
     private void setupStepNavigation() {
         if (bottomNavigationView != null) {
-            bottomNavigationView.getMenu().getItem(0).setEnabled(currentRecipeStepPosition > 0);
-            bottomNavigationView.getMenu().getItem(1).setEnabled(currentRecipeStepPosition < recipe.steps.size() - 1);
-
             bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
                 if (menuItem.getItemId() == R.id.next_step)
-                    currentRecipeStepPosition++;
+                    viewModel.nextStep();
                 else if (menuItem.getItemId() == R.id.previous_step)
-                    currentRecipeStepPosition--;
-
-                // disable "previous" and "next" nav menu options if the bounds of the step array are reached
-                bottomNavigationView.getMenu().getItem(0).setEnabled(currentRecipeStepPosition > 0);
-                bottomNavigationView.getMenu().getItem(1).setEnabled(currentRecipeStepPosition < recipe.steps.size() - 1);
-
-                if (stepInstructionsTV != null)
-                    stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
-                showPlayer();
-                viewModel.changeVideoSource(
-                        new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(requireContext(),
-                                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
-                                .createMediaSource(Uri.parse(recipe.steps.get(currentRecipeStepPosition).videoURL)));
-
+                    viewModel.previousStep();
                 return true;
             });
         }
+    }
+
+    private void setNavigationPreviousEnabled(Boolean previousEnabled) {
+        if (bottomNavigationView != null)
+            bottomNavigationView.getMenu().getItem(0).setEnabled(previousEnabled);
+    }
+
+    private void setNavigationNextEnabled(Boolean nextEnabled) {
+        if (bottomNavigationView != null)
+            bottomNavigationView.getMenu().getItem(1).setEnabled(nextEnabled);
     }
 }
