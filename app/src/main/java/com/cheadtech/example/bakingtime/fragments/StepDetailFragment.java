@@ -68,13 +68,6 @@ public class StepDetailFragment extends Fragment {
         videoError = view.findViewById(R.id.video_error);
         videoErrorMessageTV = view.findViewById(R.id.video_error_message_tv);
         bottomNavigationView = view.findViewById(R.id.step_navigation);
-        if (playerView == null || stepInstructionsTV == null || bottomNavigationView == null ||
-                videoErrorMessageTV == null || videoError == null) {
-            Log.e(tag, "One or more views is null");
-            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            getActivity().finish();
-            return;
-        }
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras == null) {
@@ -96,7 +89,8 @@ public class StepDetailFragment extends Fragment {
         initializeMediaSession();
 
         setupStepNavigation();
-        stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
+        if (stepInstructionsTV != null)
+            stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
         initPlayer(Uri.parse(recipe.steps.get(currentRecipeStepPosition).videoURL));
     }
 
@@ -132,7 +126,8 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaSession.setActive(false);
+        if (mediaSession != null)
+            mediaSession.setActive(false);
     }
 
     private void releasePlayer() {
@@ -142,32 +137,25 @@ public class StepDetailFragment extends Fragment {
     }
 
     private void showPlayer() {
-        if (videoError == null || playerView == null) {
-            Log.e(tag, "showPlayer() - A View is null");
-            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            return;
+        if (videoError != null && playerView != null) {
+            videoError.setVisibility(View.GONE);
+            playerView.setVisibility(View.VISIBLE);
         }
-
-        videoError.setVisibility(View.GONE);
-        playerView.setVisibility(View.VISIBLE);
     }
 
     private void hidePlayer(String errorMessage) {
-        if (videoError == null || playerView == null || videoErrorMessageTV == null) {
-            Log.e(tag, "hidePlayer() - A View is null");
-            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            return;
+        if (videoError != null && playerView != null && videoErrorMessageTV != null) {
+            videoErrorMessageTV.setText(errorMessage);
+            videoError.setVisibility(View.VISIBLE);
+            playerView.setVisibility(View.GONE);
         }
-
-        videoErrorMessageTV.setText(errorMessage);
-        videoError.setVisibility(View.VISIBLE);
-        playerView.setVisibility(View.GONE);
     }
 
     private void initPlayer(Uri videoUri) {
         if (player == null) {
             player = ExoPlayerFactory.newSimpleInstance(requireContext(), new DefaultTrackSelector(), new DefaultLoadControl());
-            playerView.setPlayer(player);
+            if (playerView != null)
+                playerView.setPlayer(player);
         } else {
             player.setPlayWhenReady(false);
         }
@@ -227,7 +215,8 @@ public class StepDetailFragment extends Fragment {
                 bottomNavigationView.getMenu().getItem(0).setEnabled(currentRecipeStepPosition > 0);
                 bottomNavigationView.getMenu().getItem(1).setEnabled(currentRecipeStepPosition < recipe.steps.size() - 1);
 
-                stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
+                if (stepInstructionsTV != null)
+                    stepInstructionsTV.setText(recipe.steps.get(currentRecipeStepPosition).description);
                 initPlayer(Uri.parse(recipe.steps.get(currentRecipeStepPosition).videoURL));
 
                 return true;
