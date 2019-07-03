@@ -115,6 +115,7 @@ public class StepDetailViewModel extends ViewModel {
                     Log.d(tag, "paused by app");
                     mediaStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, player.getCurrentPosition(), 1f);
                 }
+                currentPlayerPosition = player.getCurrentPosition();
                 mediaSession.setPlaybackState(mediaStateBuilder.build());
             }
 
@@ -132,7 +133,6 @@ public class StepDetailViewModel extends ViewModel {
     public void pausePlayback(boolean playWhenReady) {
         if (player != null) {
             onPausePlayWhenReady = playWhenReady;
-            currentPlayerPosition = player.getCurrentPosition();// TODO might be able to move this to onPlayerStateChanged below, just after the if tree
             player.setPlayWhenReady(false);
         }
     }
