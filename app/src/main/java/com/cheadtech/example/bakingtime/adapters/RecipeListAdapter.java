@@ -55,10 +55,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
             ArrayList<Ingredient> ingredients = dataSet.get(holder.getAdapterPosition()).ingredients;
             SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder();
             for (Ingredient ingredient : ingredients) {
-                SpannableStringBuilder builder = new SpannableStringBuilder(trimTrailingZeroes(ingredient.quantity.toString()))
-                        .append(" ").append(ingredient.measure)
-                        .append(" ").append(ingredient.ingredient)
-                        .append("\n");
+                SpannableStringBuilder builder = new SpannableStringBuilder(trimTrailingZeroes(ingredient.quantity.toString()));
+                if (!ingredient.measure.equals("UNIT"))
+                        builder.append(" ").append(ingredient.measure);
+                builder.append(" ").append(ingredient.ingredient).append("\n");
                 builder.setSpan(new BulletSpan(12, holder.ingredientsTV.getCurrentTextColor()),
                         0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                 ingredientsBuilder.append(builder);
