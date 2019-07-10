@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Baking Time</string>
-    <string name="servings">Servings: %1$d</string>
+    <string name="ingredients_list">Ingredients:\n%1$d</string>
     <string name="ingredients_label">Ingredients</string>
     <string name="recipe_thumbnail_content_description">Recipe thumbnail.</string>
     <string name="error_please_try_again">An error occurred. Please try again.</string>
@@ -8,6 +8,7 @@
     <string name="video_not_provided">A video is not available for this step.</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+
     <!--TODO - the following string should be removed before completion-->
     <string name="appwidget_text">EXAMPLE</string>
 

@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
-public class Recipes {
+@Entity(tableName = "recipes")
+public class RecipeEntity {
     @PrimaryKey
     public Integer id;
 

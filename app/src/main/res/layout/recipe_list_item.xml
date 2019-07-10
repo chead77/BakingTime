@@ -6,14 +6,15 @@
     tools:ignore="PrivateResource"
     android:id="@+id/recipe_card"
     android:layout_width="match_parent"
-    android:layout_height="148dp"
+    android:layout_height="wrap_content"
+    android:minHeight="148dp"
     android:layout_marginTop="8dp"
     app:cardCornerRadius="5dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="16dp"
         >
 
@@ -29,22 +30,12 @@
             />
 
         <TextView
-            android:id="@+id/servings_tv"
+            android:id="@+id/ingredients_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name_tv"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
-            />
-
-        <TextView
-            android:id="@+id/ingredients_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/servings_tv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
-            android:layout_marginTop="4dp"
             />
 
         <ImageView
@@ -53,6 +44,7 @@
             android:layout_height="80dp"
             android:contentDescription="@string/recipe_thumbnail_content_description"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/name_tv"
             />

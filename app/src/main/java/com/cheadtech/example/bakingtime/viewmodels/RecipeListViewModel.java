@@ -1,13 +1,14 @@
 package com.cheadtech.example.bakingtime.viewmodels;
 
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
 
 import com.cheadtech.example.bakingtime.database.BakingTimeDB;
-import com.cheadtech.example.bakingtime.database.Ingredients;
-import com.cheadtech.example.bakingtime.database.Recipes;
-import com.cheadtech.example.bakingtime.database.Steps;
+import com.cheadtech.example.bakingtime.database.IngredientsEntity;
+import com.cheadtech.example.bakingtime.database.RecipeEntity;
+import com.cheadtech.example.bakingtime.database.StepsEntity;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
 import com.cheadtech.example.bakingtime.models.Step;
@@ -15,6 +16,7 @@ import com.cheadtech.example.bakingtime.network.RecipeService;
 import com.cheadtech.example.bakingtime.network.ServiceLocator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +29,10 @@ public class RecipeListViewModel extends ViewModel {
 
     public interface RecipeListViewModelCallback {
         void onNetworkError();
-        void onDBError();
+        void onDBError(String logMessage);
+        void onEmptyRecipes();
+        void onEmptyIngredients();
+        void onSuccess(ArrayList<Recipe> adapterRecipes);
     }
     private RecipeListViewModelCallback callback;
 
@@ -70,16 +75,16 @@ public class RecipeListViewModel extends ViewModel {
         new Thread(() -> {
             try {
                 // clear out the recipes, ingredients, and steps table and repopulate with new data.
-                db.recipesDao().delete(db.recipesDao().getAllRecipes());
+                db.recipesDao().delete(db.recipesDao().getAllRecipesOrderedById());
                 db.ingredientsDao().delete(db.ingredientsDao().getAllIngredients());
                 db.stepsDao().delete(db.stepsDao().getAllSteps());
 
-                ArrayList<Recipes> newRecipes = new ArrayList<>();
-                ArrayList<Ingredients> newIngredients = new ArrayList<>();
-                ArrayList<Steps> newSteps = new ArrayList<>();
+                ArrayList<RecipeEntity> newRecipes = new ArrayList<>();
+                ArrayList<IngredientsEntity> newIngredients = new ArrayList<>();
+                ArrayList<StepsEntity> newSteps = new ArrayList<>();
 
                 for (Recipe recipe : recipes) {
-                    Recipes newRecipe = new Recipes();
+                    RecipeEntity newRecipe = new RecipeEntity();
                     newRecipe.id = recipe.id;
                     newRecipe.name = recipe.name;
                     newRecipe.servings = recipe.servings;
@@ -87,7 +92,7 @@ public class RecipeListViewModel extends ViewModel {
                     newRecipes.add(newRecipe);
 
                     for (Ingredient ingredient : recipe.ingredients) {
-                        Ingredients newIngredient = new Ingredients();
+                        IngredientsEntity newIngredient = new IngredientsEntity();
                         newIngredient.recipeId = recipe.id;
                         newIngredient.quantity = ingredient.quantity;
                         newIngredient.measure = ingredient.measure;
@@ -96,7 +101,7 @@ public class RecipeListViewModel extends ViewModel {
                     }
 
                     for (Step step : recipe.steps) {
-                        Steps newStep = new Steps();
+                        StepsEntity newStep = new StepsEntity();
                         newStep.recipeId = recipe.id;
                         newStep.stepId = step.id;
                         newStep.shortDescription = step.shortDescription;
@@ -106,12 +111,55 @@ public class RecipeListViewModel extends ViewModel {
                         newSteps.add(newStep);
                     }
                 }
-                db.recipesDao().insertAll(newRecipes);
                 db.ingredientsDao().insertAll(newIngredients);
                 db.stepsDao().insertAll(newSteps);
+                db.recipesDao().insertAll(newRecipes);
             } catch (Exception e) {
-                Log.e(tag, e.getMessage());
-                callback.onDBError();
+                callback.onDBError("Error loading ingredients list:\n\n" + e.getMessage());
+            }
+        }).start();
+    }
+
+    public void updateRecipeList(BakingTimeDB db, List<RecipeEntity> recipes) {
+        if (recipes == null || recipes.size() < 1) {
+            callback.onEmptyRecipes();
+            return;
+        }
+
+        Handler handler = new Handler();
+        new Thread(() -> {
+            try {
+                ArrayList<IngredientsEntity> allIngredients = (ArrayList<IngredientsEntity>) db.ingredientsDao().getAllIngredients();
+
+                if (allIngredients == null || allIngredients.isEmpty()) {
+                    handler.post(() -> callback.onEmptyIngredients());
+                    return;
+                }
+
+                ArrayList<Recipe> adapterRecipes = new ArrayList<>();
+                for (RecipeEntity dbRecipe : recipes) {
+                    Recipe adapterRecipe = new Recipe();
+                    adapterRecipe.id = dbRecipe.id;
+                    adapterRecipe.name = dbRecipe.name;
+                    adapterRecipe.image = dbRecipe.image;
+                    adapterRecipe.servings = dbRecipe.servings;
+
+                    ArrayList<Ingredient> adapterIngredients = new ArrayList<>();
+                    for (IngredientsEntity dbIngredient : allIngredients) {
+                        if (dbIngredient.recipeId.equals(adapterRecipe.id)) {
+                            Ingredient adapterIngredient = new Ingredient();
+                            adapterIngredient.quantity = dbIngredient.quantity;
+                            adapterIngredient.measure = dbIngredient.measure;
+                            adapterIngredient.ingredient = dbIngredient.ingredient;
+                            adapterIngredients.add(adapterIngredient);
+                        }
+                    }
+                    adapterRecipe.ingredients = adapterIngredients;
+                    adapterRecipes.add(adapterRecipe);
+                }
+                handler.post(() -> callback.onSuccess(adapterRecipes));
+            } catch (Exception e) {
+                handler.post(() -> callback.onDBError("Error loading ingredients list:\n\n" + e.getMessage()));
             }
         }).start();
     }

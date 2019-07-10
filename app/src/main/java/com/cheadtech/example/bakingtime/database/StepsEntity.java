@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
-public class Steps {
+@Entity(tableName = "steps")
+public class StepsEntity {
     @ColumnInfo(name = "row_id")
     @PrimaryKey(autoGenerate = true)
     Integer rowId;

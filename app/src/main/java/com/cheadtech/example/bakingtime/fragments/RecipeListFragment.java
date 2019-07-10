@@ -2,6 +2,7 @@ package com.cheadtech.example.bakingtime.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,17 @@ import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.StepListActivity;
 import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
-import com.cheadtech.example.bakingtime.database.Recipes;
+import com.cheadtech.example.bakingtime.models.Recipe;
 import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeListFragment extends Fragment {
+    private final String tag = getClass().toString();
+
     private RecyclerView recipeListRV;
+
+    private RecipeListViewModel viewModel;
 
     public RecipeListFragment() {}
 
@@ -39,40 +43,55 @@ public class RecipeListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         recipeListRV = view.findViewById(R.id.recipe_list_rv);
-        if (recipeListRV != null)
-            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipeId ->
-                    startActivity(new Intent(requireContext(), StepListActivity.class)
-                            .putExtra(getString(R.string.extra_recipe_id), recipeId))));
+        if (recipeListRV == null) {
+            Log.e(tag, "Error loading view");
+            return;
+        }
+        recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipeId ->
+                startActivity(new Intent(requireContext(), StepListActivity.class)
+                        .putExtra(getString(R.string.extra_recipe_id), recipeId))));
 
         initViewModel();
 
         DatabaseLoader.getDbInstance(getContext())
                 .recipesDao()
-                .getAllRecipesLiveData()
-                .observe(this, this::updateRecipeList);
-    }
-
-    private void updateRecipeList(@NonNull List<Recipes> recipes) {
-        if (recipeListRV != null) {
-            RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
-            if (adapter != null) {
-                adapter.setData(new ArrayList<>(recipes));
-            }
-        }
+                .getAllRecipesOrderedByIdLiveData()
+                .observe(this, recipes -> viewModel.updateRecipeList(DatabaseLoader.getDbInstance(getContext()), recipes));
     }
 
     private void initViewModel() {
-        ViewModelProviders.of(this).get(RecipeListViewModel.class)
-                .init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
-                    @Override
-                    public void onNetworkError() {
-                        Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
-                    }
+        viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+        viewModel.init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
+            @Override
+            public void onNetworkError() {
+                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
+            }
 
-                    @Override
-                    public void onDBError() {
-                        Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
-                    }
-                });
+            @Override
+            public void onDBError(String logMessage) {
+                Log.e(tag, logMessage);
+                Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onEmptyRecipes() {
+                Log.w(tag, "recipe list is empty");
+                //                Toast.makeText(requireContext(), "TODO" /* TODO */, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onEmptyIngredients() {
+                Log.w(tag, "Error loading ingredients list: List was null or empty");
+//                Toast.makeText(requireContext(), "TODO" /* TODO */, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onSuccess(ArrayList<Recipe> recipes) {
+                if (recipeListRV != null && recipeListRV.getAdapter() != null) {
+                    RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
+                    adapter.setData(recipes);
+                }
+            }
+        });
     }
 }

@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cheadtech.example.bakingtime.database.BakingTimeDB;
-import com.cheadtech.example.bakingtime.database.Ingredients;
-import com.cheadtech.example.bakingtime.database.Recipes;
-import com.cheadtech.example.bakingtime.database.Steps;
+import com.cheadtech.example.bakingtime.database.IngredientsEntity;
+import com.cheadtech.example.bakingtime.database.RecipeEntity;
+import com.cheadtech.example.bakingtime.database.StepsEntity;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
 import com.cheadtech.example.bakingtime.models.Step;
@@ -38,9 +38,9 @@ public class StepListViewModel extends ViewModel {
     private void loadRecipeComponents() {
         new Thread(() -> {
             try {
-                Recipes dbRecipe = db.recipesDao().getRecipe(recipeId);
-                ArrayList<Ingredients> dbIngredients = new ArrayList<>(db.ingredientsDao().getAllIngredientsForRecipe(recipeId));
-                ArrayList<Steps> dbSteps = new ArrayList<>(db.stepsDao().getAllStepsForRecipe(recipeId));
+                RecipeEntity dbRecipe = db.recipesDao().getRecipe(recipeId);
+                ArrayList<IngredientsEntity> dbIngredients = new ArrayList<>(db.ingredientsDao().getAllIngredientsForRecipe(recipeId));
+                ArrayList<StepsEntity> dbSteps = new ArrayList<>(db.stepsDao().getAllStepsForRecipe(recipeId));
 
                 Recipe recipe = new Recipe();
                 recipe.id = dbRecipe.id;
@@ -48,7 +48,7 @@ public class StepListViewModel extends ViewModel {
                 recipe.servings = dbRecipe.servings;
                 recipe.image = dbRecipe.image;
                 recipe.ingredients = new ArrayList<>();
-                for (Ingredients dbIngredient : dbIngredients) {
+                for (IngredientsEntity dbIngredient : dbIngredients) {
                     Ingredient ingredient = new Ingredient();
                     ingredient.quantity = dbIngredient.quantity;
                     ingredient.measure = dbIngredient.measure;
@@ -56,7 +56,7 @@ public class StepListViewModel extends ViewModel {
                     recipe.ingredients.add(ingredient);
                 }
                 recipe.steps = new ArrayList<>();
-                for (Steps dbStep : dbSteps) {
+                for (StepsEntity dbStep : dbSteps) {
                     Step step = new Step();
                     step.id = dbStep.stepId;
                     step.shortDescription = dbStep.shortDescription;

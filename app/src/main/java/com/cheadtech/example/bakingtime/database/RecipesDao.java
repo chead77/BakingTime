@@ -10,18 +10,18 @@ import java.util.List;
 
 @Dao
 public interface RecipesDao {
-    @Query("SELECT * FROM recipes")
-    List<Recipes> getAllRecipes();
+    @Query("SELECT * FROM recipes ORDER BY id")
+    List<RecipeEntity> getAllRecipesOrderedById();
 
-    @Query("SELECT * FROM recipes")
-    LiveData<List<Recipes>> getAllRecipesLiveData();
+    @Query("SELECT * FROM recipes ORDER BY id")
+    LiveData<List<RecipeEntity>> getAllRecipesOrderedByIdLiveData();
 
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
-    Recipes getRecipe(Integer recipeId);
+    RecipeEntity getRecipe(Integer recipeId);
 
     @Insert
-    void insertAll(List<Recipes> recipes);
+    void insertAll(List<RecipeEntity> recipes);
 
     @Delete
-    void delete(List<Recipes> recipes);
+    void delete(List<RecipeEntity> recipes);
 }
