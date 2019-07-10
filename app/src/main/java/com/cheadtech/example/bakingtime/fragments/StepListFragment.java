@@ -89,16 +89,31 @@ public class StepListFragment extends Fragment {
         SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder();
         List<Ingredient> ingredients = recipe.ingredients;
         for (Ingredient ingredient : ingredients) {
-            SpannableStringBuilder builder = new SpannableStringBuilder(ingredient.quantity.toString())
-                    .append(" ").append(ingredient.measure)
-                    .append(" ").append(ingredient.ingredient)
-                    .append("\n");
+            SpannableStringBuilder builder = new SpannableStringBuilder(trimTrailingZeroes(ingredient.quantity.toString()));
+            if (!ingredient.measure.equals("UNIT"))
+                builder.append(" ").append(ingredient.measure);
+            builder.append(" ").append(ingredient.ingredient).append("\n");
             builder.setSpan(new BulletSpan(12, ingredientsTV.getCurrentTextColor()), 0, builder.length() - 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             ingredientsBuilder.append(builder);
         }
 
         // trim off the trailing new line character
-        ingredientsTV.setText(ingredientsBuilder.delete(ingredientsBuilder.length() - 1, ingredientsBuilder.length()));
+        if (ingredientsBuilder.toString().endsWith("\n"))
+            ingredientsTV.setText(ingredientsBuilder.delete(ingredientsBuilder.length() - 1, ingredientsBuilder.length()));
+        else
+            ingredientsTV.setText(ingredientsBuilder);
+
+    }
+
+    private String trimTrailingZeroes(String quantity) {
+        if (quantity.contains(".")) {
+            while (quantity.endsWith("0")) {
+                quantity = quantity.substring(0, quantity.length() - 1);
+            }
+            if (quantity.endsWith("."))
+                quantity = quantity.substring(0, quantity.length() - 1);
+        }
+        return quantity;
     }
 
     private void populateSteps(Recipe recipe) {
