@@ -18,17 +18,16 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_time_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+//        // Construct the RemoteViews object
+//        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_time_widget);
+//        views.setTextViewText(R.id.appwidget_text, context.getString(R.string.appwidget_text));
 
-        Intent intent = new Intent(context, RecipeListActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.appwidget, pendingIntent);
+        // TODO - this will be moved from the frame to the title view, and new click listeners will be in place for each grid view item
+//        views.setOnClickPendingIntent(R.id.app_widget_frame,
+//                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
 
         // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+//        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override

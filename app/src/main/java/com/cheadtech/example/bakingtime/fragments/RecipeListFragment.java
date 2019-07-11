@@ -61,37 +61,43 @@ public class RecipeListFragment extends Fragment {
 
     private void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+        viewModel.recipesLiveData.observe(this, this::onRecipesUpdated);
         viewModel.init(DatabaseLoader.getDbInstance(getContext()), new RecipeListViewModel.RecipeListViewModelCallback() {
             @Override
             public void onNetworkError() {
-                Toast.makeText(requireContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onDBError(String logMessage) {
                 Log.e(tag, logMessage);
-                Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onEmptyRecipes() {
+                // In a production app, there might be a reason to notify the user here, but it since
+                // it happens when the database table is cleared, it's just a log entry
                 Log.w(tag, "recipe list is empty");
-                //                Toast.makeText(requireContext(), "TODO" /* TODO */, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onEmptyIngredients() {
+                // In a production app, there might be a reason to notify the user here, but it since
+                // it happens when the database table is cleared, it's just a log entry
                 Log.w(tag, "Error loading ingredients list: List was null or empty");
-//                Toast.makeText(requireContext(), "TODO" /* TODO */, Toast.LENGTH_LONG).show();
             }
 
-            @Override
-            public void onSuccess(ArrayList<Recipe> recipes) {
-                if (recipeListRV != null && recipeListRV.getAdapter() != null) {
-                    RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
-                    adapter.setData(recipes);
-                }
-            }
         });
+    }
+
+    private void onRecipesUpdated(ArrayList<Recipe> recipes) {
+        Log.d(tag, "");
+        if (recipeListRV != null && recipeListRV.getAdapter() != null) {
+            RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
+            adapter.setData(recipes);
+        }
     }
 }

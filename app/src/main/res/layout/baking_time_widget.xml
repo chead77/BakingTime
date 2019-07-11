@@ -1,23 +1,29 @@
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/appwidget"
+    android:id="@+id/app_widget_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin">
+    android:padding="@dimen/widget_margin"
+    android:theme="@style/AppTheme"
+    >
 
-    <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/recipes_grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        />
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/fallback_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_access_time"
+        android:layout_gravity="center"
+        android:contentDescription="@string/please_wait"
+        android:scaleType="fitCenter"
+        android:maxHeight="64dp"
+        android:maxWidth="64dp"
+        android:background="@color/colorPrimaryDark"
+        />
+
+</FrameLayout>

@@ -3,6 +3,7 @@ package com.cheadtech.example.bakingtime.viewmodels;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.cheadtech.example.bakingtime.database.BakingTimeDB;
@@ -27,12 +28,14 @@ public class RecipeListViewModel extends ViewModel {
 
     private BakingTimeDB db;
 
+    public final MutableLiveData<ArrayList<Recipe>> recipesLiveData = new MutableLiveData<>();
+
     public interface RecipeListViewModelCallback {
         void onNetworkError();
         void onDBError(String logMessage);
         void onEmptyRecipes();
         void onEmptyIngredients();
-        void onSuccess(ArrayList<Recipe> adapterRecipes);
+//        void onRecipesUpdated(ArrayList<Recipe> adapterRecipes);
     }
     private RecipeListViewModelCallback callback;
 
@@ -126,6 +129,7 @@ public class RecipeListViewModel extends ViewModel {
             return;
         }
 
+        // A handler is needed since a DB error should trigger some sort of user notification in the UI thread
         Handler handler = new Handler();
         new Thread(() -> {
             try {
@@ -157,7 +161,7 @@ public class RecipeListViewModel extends ViewModel {
                     adapterRecipe.ingredients = adapterIngredients;
                     adapterRecipes.add(adapterRecipe);
                 }
-                handler.post(() -> callback.onSuccess(adapterRecipes));
+                recipesLiveData.postValue(adapterRecipes);
             } catch (Exception e) {
                 handler.post(() -> callback.onDBError("Error loading ingredients list:\n\n" + e.getMessage()));
             }
