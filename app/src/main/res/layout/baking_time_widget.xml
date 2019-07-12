@@ -1,29 +1,55 @@
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_widget_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
     android:theme="@style/AppTheme"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin"
     >
 
-    <GridView
-        android:id="@+id/recipes_grid"
+    <RelativeLayout
+        android:id="@+id/widget_title_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        >
 
-    <ImageView
-        android:id="@+id/fallback_image"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:padding="@dimen/widget_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_access_time"
-        android:layout_gravity="center"
-        android:contentDescription="@string/please_wait"
-        android:scaleType="fitCenter"
-        android:maxHeight="64dp"
-        android:maxWidth="64dp"
-        android:background="@color/colorPrimaryDark"
-        />
+        >
 
-</FrameLayout>
+        <GridView
+            android:id="@+id/recipes_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:id="@+id/fallback_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_access_time"
+            android:layout_gravity="center"
+            android:contentDescription="@string/please_wait_content_description"
+            android:scaleType="fitCenter"
+            android:maxHeight="64dp"
+            android:maxWidth="64dp"
+            android:background="@color/colorPrimaryDark"
+            />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -55,7 +55,7 @@ public class RecipeListFragment extends Fragment {
 
         DatabaseLoader.getDbInstance(getContext())
                 .recipesDao()
-                .getAllRecipesOrderedByIdLiveData()
+                .getAllRecipesLiveData()
                 .observe(this, recipes -> viewModel.updateRecipeList(DatabaseLoader.getDbInstance(getContext()), recipes));
     }
 

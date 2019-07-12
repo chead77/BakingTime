@@ -3,12 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/baking_time_widget"
     android:initialLayout="@layout/baking_time_widget"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
+    android:minWidth="256dp"
+    android:minHeight="64dp"
     android:previewImage="@mipmap/ic_launcher_round"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen"
-    >
-
-</appwidget-provider>
+    />

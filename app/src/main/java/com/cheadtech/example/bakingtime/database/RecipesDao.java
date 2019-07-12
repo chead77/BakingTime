@@ -11,10 +11,10 @@ import java.util.List;
 @Dao
 public interface RecipesDao {
     @Query("SELECT * FROM recipes ORDER BY id")
-    List<RecipeEntity> getAllRecipesOrderedById();
+    List<RecipeEntity> getAllRecipes();
 
     @Query("SELECT * FROM recipes ORDER BY id")
-    LiveData<List<RecipeEntity>> getAllRecipesOrderedByIdLiveData();
+    LiveData<List<RecipeEntity>> getAllRecipesLiveData();
 
     @Query("SELECT * FROM recipes WHERE id = :recipeId")
     RecipeEntity getRecipe(Integer recipeId);

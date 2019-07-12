@@ -78,7 +78,7 @@ public class RecipeListViewModel extends ViewModel {
         new Thread(() -> {
             try {
                 // clear out the recipes, ingredients, and steps table and repopulate with new data.
-                db.recipesDao().delete(db.recipesDao().getAllRecipesOrderedById());
+                db.recipesDao().delete(db.recipesDao().getAllRecipes());
                 db.ingredientsDao().delete(db.ingredientsDao().getAllIngredients());
                 db.stepsDao().delete(db.stepsDao().getAllSteps());
 

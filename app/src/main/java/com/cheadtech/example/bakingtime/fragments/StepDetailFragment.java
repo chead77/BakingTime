@@ -116,13 +116,13 @@ public class StepDetailFragment extends Fragment {
         if (getContext() != null)
             switch (errorId) {
                 case StepDetailViewModel.VIDEO_NOT_PROVIDED:
-                    hidePlayer(getString(R.string.video_not_provided));
+                    hidePlayer(getString(R.string.error_video_not_provided));
                     break;
                 case StepDetailViewModel.VIDEO_PLAYBACK_ERROR:
-                    hidePlayer(getString(R.string.video_playback_error));
+                    hidePlayer(getString(R.string.error_video_playback_error));
                     break;
                 default:
-                    hidePlayer(getString(R.string.video_playback_error));
+                    hidePlayer(getString(R.string.error_video_playback_error));
             }
     }
 
