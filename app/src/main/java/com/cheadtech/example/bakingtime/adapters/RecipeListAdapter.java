@@ -34,7 +34,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
     }
 
     public interface RecipeListAdapterCallback {
-        void onRecipeClicked(Integer recipeId);
+        void onRecipeClicked(Recipe recipe);
     }
     private RecipeListAdapterCallback callback;
 
@@ -76,7 +76,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
                     .placeholder(R.drawable.ic_android_black_80dp)
                     .error(R.drawable.ic_android_black_80dp)
                     .into(holder.imageIV);
-            holder.recipeCard.setOnClickListener(view -> callback.onRecipeClicked(recipe.id));
+            holder.recipeCard.setOnClickListener(view -> callback.onRecipeClicked(recipe));
         }
     }
 

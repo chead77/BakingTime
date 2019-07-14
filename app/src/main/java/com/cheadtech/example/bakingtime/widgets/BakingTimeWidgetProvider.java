@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import androidx.annotation.Nullable;
+
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.RecipeListActivity;
 import com.cheadtech.example.bakingtime.models.Recipe;
@@ -24,7 +26,7 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
     private static final String logTag = BakingTimeWidgetProvider.class.getSimpleName();
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                        int appWidgetId, ArrayList<Recipe> recipes) {
+                                        int appWidgetId, @Nullable ArrayList<Recipe> recipes) {
         RemoteViews views = getRecipesGridRemoteView(context);
 
         if (recipes != null && recipes.size() > 0) {
@@ -58,7 +60,7 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
         BakingTimeIntentService.startActionUpdateWidgets(context);
     }
 
-    public static void updateWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, ArrayList<Recipe> recipes) {
+    public static void updateWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, @Nullable ArrayList<Recipe> recipes) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, recipes);
         }

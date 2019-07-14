@@ -48,9 +48,9 @@ public class RecipeListFragment extends Fragment {
             Log.e(logTag, "Error loading view");
             return;
         }
-        recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipeId ->
+        recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe ->
                 startActivity(new Intent(requireContext(), StepListActivity.class)
-                        .putExtra(getString(R.string.extra_recipe_id), recipeId))));
+                        .putExtra(getString(R.string.extra_recipe), recipe))));
 
         initViewModel();
 

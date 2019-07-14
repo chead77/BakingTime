@@ -16,25 +16,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.StepDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.StepListAdapter;
-import com.cheadtech.example.bakingtime.database.DatabaseLoader;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
-import com.cheadtech.example.bakingtime.viewmodels.StepListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StepListFragment extends Fragment {
-    private final String tag = this.getClass().toString();
+    private static final String logTag = StepListFragment.class.getSimpleName();
 
     private TextView ingredientsTV;
     private RecyclerView stepsRV;
+
+    private Recipe recipe;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -47,26 +46,31 @@ public class StepListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (getActivity() == null) {
-            Log.e(tag, "Activity is null");
+            Log.e(logTag, "Activity is null");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int recipeId = -1;
         Bundle extras = getActivity().getIntent().getExtras();
-        if (extras != null)
-            recipeId = extras.getInt(getString(R.string.extra_recipe_id), -1);
+        if (extras == null || !extras.containsKey(getString(R.string.extra_recipe))) {
+            Log.e(logTag, "Error retrieving extras");
+            Toast.makeText(getContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        recipe = extras.getParcelable(getString(R.string.extra_recipe));
 
         ingredientsTV = view.findViewById(R.id.ingredients_tv);
         stepsRV = view.findViewById(R.id.steps_rv);
-        if (ingredientsTV == null || stepsRV == null || recipeId == -1) {
-            Log.e(tag, "One or more views is null, or invalid recipe ID");
+        if (ingredientsTV == null || stepsRV == null || recipe == null) {
+            Log.e(logTag, "One or more views is null, or invalid recipe ID");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
             getActivity().finish();
             return;
         }
 
-        initViewModel(recipeId);
+        populateIngredients();
+        populateSteps();
 
         // The top-level ScrollView starts out scrolled past the ingredient card. The following code corrects for this.
         NestedScrollView scrollView = view.findViewById(R.id.step_list_scroller);
@@ -75,17 +79,7 @@ public class StepListFragment extends Fragment {
         }
     }
 
-    private void initViewModel(int recipeId) {
-        StepListViewModel viewModel = ViewModelProviders.of(this).get(StepListViewModel.class);
-        viewModel.recipeLiveData.observe(this, recipe -> {
-            populateIngredients(recipe);
-            populateSteps(recipe);
-        });
-        viewModel.init(DatabaseLoader.getDbInstance(requireContext()), recipeId, () ->
-                Toast.makeText(requireContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show());
-    }
-
-    private void populateIngredients(Recipe recipe) {
+    private void populateIngredients() {
         SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder();
         List<Ingredient> ingredients = recipe.ingredients;
         for (Ingredient ingredient : ingredients) {
@@ -116,7 +110,7 @@ public class StepListFragment extends Fragment {
         return quantity;
     }
 
-    private void populateSteps(Recipe recipe) {
+    private void populateSteps() {
         stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), stepPosition -> {
             // TODO - load step detail fragment if on a tablet???
             Intent intent = new Intent(getContext(), StepDetailActivity.class);
