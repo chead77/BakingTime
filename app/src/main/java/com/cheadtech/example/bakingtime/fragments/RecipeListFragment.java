@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cheadtech.example.bakingtime.R;
-import com.cheadtech.example.bakingtime.activities.StepListActivity;
+import com.cheadtech.example.bakingtime.activities.RecipeDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
 import com.cheadtech.example.bakingtime.models.Recipe;
@@ -49,7 +49,7 @@ public class RecipeListFragment extends Fragment {
             return;
         }
         recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe ->
-                startActivity(new Intent(requireContext(), StepListActivity.class)
+                startActivity(new Intent(requireContext(), RecipeDetailActivity.class)
                         .putExtra(getString(R.string.extra_recipe), recipe))));
 
         initViewModel();

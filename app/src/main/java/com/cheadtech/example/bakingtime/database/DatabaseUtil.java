@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 ////////////////////////////////////////////////////////////////////////////
-// Methods accessing the database should not be called from UI/main thread
+// Methods accessing the database should not be called from UI thread
 ////////////////////////////////////////////////////////////////////////////
 public class DatabaseUtil {
     private static final String logTag = DatabaseUtil.class.getSimpleName();

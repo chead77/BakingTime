@@ -4,6 +4,7 @@
     <string name="ingredients_label">Ingredients</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+    <string name="no_recipes_found">No Recipes Found</string>
 
     <!-- content descriptions -->
     <string name="recipe_thumbnail_content_description">Recipe thumbnail</string>

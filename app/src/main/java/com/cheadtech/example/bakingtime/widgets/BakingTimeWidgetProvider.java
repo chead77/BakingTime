@@ -7,13 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.activities.RecipeListActivity;
+import com.cheadtech.example.bakingtime.activities.RecipeDetailActivity;
 import com.cheadtech.example.bakingtime.models.Recipe;
 import com.cheadtech.example.bakingtime.services.BakingTimeIntentService;
 
@@ -27,28 +27,21 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                         int appWidgetId, @Nullable ArrayList<Recipe> recipes) {
-        RemoteViews views = getRecipesGridRemoteView(context);
+        RemoteViews views;
 
         if (recipes != null && recipes.size() > 0) {
-            Log.d(logTag, recipes.size() + " recipes found");
+            Log.e(logTag, recipes.size() + " recipes loaded to widget id " + appWidgetId); // TODO - remove or change to debug
 
-            // TODO - Do I want to display something other than the grid if the widget gets shrunk too far???
-            //  Use appWidgetManager.getappwidgetoptions(appwidgetid);
-            //  Followed by options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH?
-            //  for now, set up the grid remote view...
-
-            views.setViewVisibility(R.id.recipes_grid, View.VISIBLE);
-            views.setViewVisibility(R.id.fallback_image, View.GONE);
+            Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+            int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+            if (width < 200)
+                views = getSingleImageRemoteView(context);
+            else
+                views = getRecipesGridRemoteView(context);
         } else {
-            Log.w(logTag, "No recipes found");
-            views.setViewVisibility(R.id.recipes_grid, View.GONE);
-            views.setViewVisibility(R.id.fallback_image, View.VISIBLE);
+            Log.e(logTag, "No recipes found"); // TODO - remove or change to warning
+            views = getSingleImageRemoteView(context);
         }
-
-        views.setOnClickPendingIntent(R.id.widget_title_view,
-                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
-        views.setOnClickPendingIntent(R.id.fallback_image,
-                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -68,14 +61,33 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        // TODO
-
+        BakingTimeIntentService.startActionUpdateWidgets(context);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
+    private static RemoteViews getSingleImageRemoteView(Context context) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
+
+        views.setOnClickPendingIntent(R.id.widget_title_view,
+                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
+        views.setOnClickPendingIntent(R.id.empty_view,
+                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
+
+        return views;
+    }
+
     private static RemoteViews getRecipesGridRemoteView(Context context) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_time_widget);
-        // TODO -
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
+
+        views.setRemoteAdapter(R.id.recipes_grid, new Intent(context, GridWidgetService.class));
+        views.setPendingIntentTemplate(R.id.recipes_grid, PendingIntent.getActivity(context, 0, new Intent(context, RecipeDetailActivity.class), 0));
+        views.setEmptyView(R.id.recipes_grid, R.id.empty_view);
+
+        views.setOnClickPendingIntent(R.id.widget_title_view,
+                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
+        views.setOnClickPendingIntent(R.id.empty_view,
+                PendingIntent.getActivity(context, 0, new Intent(context, RecipeListActivity.class), 0));
+
         return views;
     }
 }

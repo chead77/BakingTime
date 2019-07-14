@@ -16,7 +16,7 @@ public class RecipeListItemViewHolder extends RecyclerView.ViewHolder {
         nameTV = itemView.findViewById(R.id.name_tv);
         ingredientsTV = itemView.findViewById(R.id.ingredients_tv);
         imageIV = itemView.findViewById(R.id.recipe_image_iv);
-        recipeCard = itemView.findViewById(R.id.recipe_card);
+        recipeCard = itemView.findViewById(R.id.recipe_widget_item);
     }
 
     public MaterialCardView recipeCard;

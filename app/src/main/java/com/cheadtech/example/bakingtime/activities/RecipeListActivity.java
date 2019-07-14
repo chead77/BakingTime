@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cheadtech.example.bakingtime.R;
 
 public class RecipeListActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

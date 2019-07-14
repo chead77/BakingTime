@@ -2,7 +2,7 @@
 <fragment
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recipe_detail_fragment"
-    android:name="com.cheadtech.example.bakingtime.fragments.StepListFragment"
+    android:name="com.cheadtech.example.bakingtime.fragments.RecipeDetailFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginStart="8dp"

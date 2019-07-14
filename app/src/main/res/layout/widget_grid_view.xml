@@ -34,22 +34,30 @@
         <GridView
             android:id="@+id/recipes_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:numColumns="1"
             />
 
-        <ImageView
-            android:id="@+id/fallback_image"
+        <RelativeLayout
+            android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_access_time"
-            android:layout_gravity="center"
-            android:contentDescription="@string/please_wait_content_description"
-            android:scaleType="fitCenter"
-            android:maxHeight="64dp"
-            android:maxWidth="64dp"
-            android:background="@color/colorPrimaryDark"
-            />
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_android_black_80dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/please_wait_content_description"
+                android:scaleType="fitCenter"
+                android:background="@color/colorPrimaryDark"
+                android:alpha="0.2"
+                />
+
+        </RelativeLayout>
 
     </FrameLayout>
 

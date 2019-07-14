@@ -13,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <service
-            android:name=".services.BakingTimeIntentService"
-            android:exported="false"/>
-
         <receiver android:name=".widgets.BakingTimeWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -35,15 +31,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.StepListActivity"
+            android:name=".activities.RecipeDetailActivity"
             android:parentActivityName=".activities.RecipeListActivity" />
         <activity
             android:name=".activities.StepDetailActivity"
-            android:parentActivityName=".activities.StepListActivity" />
+            android:parentActivityName=".activities.RecipeDetailActivity" />
 
         <service
             android:name=".widgets.GridWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".services.BakingTimeIntentService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

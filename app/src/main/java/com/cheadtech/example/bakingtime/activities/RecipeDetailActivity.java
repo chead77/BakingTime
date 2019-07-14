@@ -10,9 +10,7 @@ import androidx.core.app.NavUtils;
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.models.Recipe;
 
-public class StepListActivity extends AppCompatActivity {
-    private final String tag = getClass().toString();
-
+public class RecipeDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

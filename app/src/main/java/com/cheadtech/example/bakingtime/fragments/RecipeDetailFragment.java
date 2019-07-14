@@ -27,8 +27,8 @@ import com.cheadtech.example.bakingtime.models.Recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepListFragment extends Fragment {
-    private static final String logTag = StepListFragment.class.getSimpleName();
+public class RecipeDetailFragment extends Fragment {
+    private static final String logTag = RecipeDetailFragment.class.getSimpleName();
 
     private TextView ingredientsTV;
     private RecyclerView stepsRV;
@@ -45,16 +45,13 @@ public class StepListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getActivity() == null) {
-            Log.e(logTag, "Activity is null");
-            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (getActivity() == null) return;
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras == null || !extras.containsKey(getString(R.string.extra_recipe))) {
             Log.e(logTag, "Error retrieving extras");
             Toast.makeText(getContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            getActivity().finish();
             return;
         }
 
@@ -63,8 +60,7 @@ public class StepListFragment extends Fragment {
         ingredientsTV = view.findViewById(R.id.ingredients_tv);
         stepsRV = view.findViewById(R.id.steps_rv);
         if (ingredientsTV == null || stepsRV == null || recipe == null) {
-            Log.e(logTag, "One or more views is null, or invalid recipe ID");
-            Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+            Log.w(logTag, "One or more views is null, or invalid recipe ID");
             getActivity().finish();
             return;
         }
@@ -74,9 +70,7 @@ public class StepListFragment extends Fragment {
 
         // The top-level ScrollView starts out scrolled past the ingredient card. The following code corrects for this.
         NestedScrollView scrollView = view.findViewById(R.id.step_list_scroller);
-        if (scrollView != null) {
-            scrollView.post(() -> scrollView.scrollTo(0, 0));
-        }
+        if (scrollView != null) scrollView.post(() -> scrollView.scrollTo(0, 0));
     }
 
     private void populateIngredients() {
