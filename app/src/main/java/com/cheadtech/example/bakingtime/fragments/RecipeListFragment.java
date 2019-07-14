@@ -19,12 +19,13 @@ import com.cheadtech.example.bakingtime.activities.StepListActivity;
 import com.cheadtech.example.bakingtime.adapters.RecipeListAdapter;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
 import com.cheadtech.example.bakingtime.models.Recipe;
+import com.cheadtech.example.bakingtime.services.BakingTimeIntentService;
 import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
 
 import java.util.ArrayList;
 
 public class RecipeListFragment extends Fragment {
-    private final String tag = getClass().toString();
+    private static final String logTag = RecipeListFragment.class.getSimpleName();
 
     private RecyclerView recipeListRV;
 
@@ -44,7 +45,7 @@ public class RecipeListFragment extends Fragment {
 
         recipeListRV = view.findViewById(R.id.recipe_list_rv);
         if (recipeListRV == null) {
-            Log.e(tag, "Error loading view");
+            Log.e(logTag, "Error loading view");
             return;
         }
         recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipeId ->
@@ -55,8 +56,8 @@ public class RecipeListFragment extends Fragment {
 
         DatabaseLoader.getDbInstance(getContext())
                 .recipesDao()
-                .getAllRecipesLiveData()
-                .observe(this, recipes -> viewModel.updateRecipeList(DatabaseLoader.getDbInstance(getContext()), recipes));
+                .getAllRecipesWithListsLiveData()
+                .observe(this, recipes -> viewModel.updateRecipeList(recipes));
     }
 
     private void initViewModel() {
@@ -68,33 +69,21 @@ public class RecipeListFragment extends Fragment {
                 if (getContext() != null)
                     Toast.makeText(getContext(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
             }
-
             @Override
-            public void onDBError(String logMessage) {
-                Log.e(tag, logMessage);
+            public void onDBError() {
                 if (getContext() != null)
                     Toast.makeText(getContext(), getString(R.string.error_database), Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onEmptyRecipes() {
-                // In a production app, there might be a reason to notify the user here, but it since
-                // it happens when the database table is cleared, it's just a log entry
-                Log.w(tag, "recipe list is empty");
+            public void onDBRefreshed() {
+                if (getContext() != null)
+                    BakingTimeIntentService.startActionUpdateWidgets(getContext().getApplicationContext());
             }
-
-            @Override
-            public void onEmptyIngredients() {
-                // In a production app, there might be a reason to notify the user here, but it since
-                // it happens when the database table is cleared, it's just a log entry
-                Log.w(tag, "Error loading ingredients list: List was null or empty");
-            }
-
         });
     }
 
     private void onRecipesUpdated(ArrayList<Recipe> recipes) {
-        Log.d(tag, "");
         if (recipeListRV != null && recipeListRV.getAdapter() != null) {
             RecipeListAdapter adapter = (RecipeListAdapter) recipeListRV.getAdapter();
             adapter.setData(recipes);

@@ -14,7 +14,7 @@ public class IngredientsEntity {
     public Integer recipeId;
 
     @ColumnInfo(name = "quantity")
-    public Double quantity;
+    public Float quantity;
 
     @ColumnInfo(name = "measure")
     public String measure;

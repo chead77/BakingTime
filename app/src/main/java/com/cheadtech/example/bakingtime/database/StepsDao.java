@@ -10,9 +10,6 @@ import java.util.List;
 
 @Dao
 public interface StepsDao {
-    @Query("SELECT * FROM steps WHERE recipe_id = :recipeId ORDER BY step_id")
-    List<StepsEntity> getAllStepsForRecipe(Integer recipeId);
-
     @Query("SELECT * FROM steps ORDER BY recipe_id, step_id")
     List<StepsEntity> getAllSteps();
 

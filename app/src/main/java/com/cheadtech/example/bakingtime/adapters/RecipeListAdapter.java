@@ -23,13 +23,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
 
     public void setData(ArrayList<Recipe> recipes) {
         dataSet.clear();
-        dataSet.addAll(recipes);
+        if (recipes != null) dataSet.addAll(recipes);
         notifyDataSetChanged();
     }
 
     public RecipeListAdapter(ArrayList<Recipe> recipes, RecipeListAdapterCallback callback) {
         dataSet.clear();
-        dataSet.addAll(recipes);
+        if (recipes != null) dataSet.addAll(recipes);
         this.callback = callback;
     }
 
@@ -56,7 +56,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
             SpannableStringBuilder ingredientsBuilder = new SpannableStringBuilder();
             for (Ingredient ingredient : ingredients) {
                 SpannableStringBuilder builder = new SpannableStringBuilder(trimTrailingZeroes(ingredient.quantity.toString()));
-                if (!ingredient.measure.equals("UNIT"))
+                if (!ingredient.measure.equals(holder.ingredientsTV.getContext().getString(R.string.measure_unit)))
                         builder.append(" ").append(ingredient.measure);
                 builder.append(" ").append(ingredient.ingredient).append("\n");
                 builder.setSpan(new BulletSpan(12, holder.ingredientsTV.getCurrentTextColor()),

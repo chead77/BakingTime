@@ -13,9 +13,6 @@ public interface IngredientsDao {
     @Query("SELECT * FROM ingredients ORDER BY recipe_id, row_id")
     List<IngredientsEntity> getAllIngredients();
 
-    @Query("SELECT * FROM ingredients WHERE recipe_id = :recipeId")
-    List<IngredientsEntity> getAllIngredientsForRecipe(Integer recipeId);
-
     @Insert
     void insertAll(ArrayList<IngredientsEntity> ingredients);
 

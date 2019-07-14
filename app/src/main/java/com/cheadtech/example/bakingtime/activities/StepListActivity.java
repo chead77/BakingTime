@@ -1,7 +1,7 @@
 package com.cheadtech.example.bakingtime.activities;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -10,8 +10,11 @@ import androidx.core.app.NavUtils;
 
 import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
+import com.cheadtech.example.bakingtime.database.DatabaseUtil;
+import com.cheadtech.example.bakingtime.models.Recipe;
 
 public class StepListActivity extends AppCompatActivity {
+    private final String tag = getClass().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +24,13 @@ public class StepListActivity extends AppCompatActivity {
         if (extras != null) {
             int recipeId = extras.getInt(getString(R.string.extra_recipe_id), -1);
             if (recipeId != -1) {
+                Handler handler = new Handler();
                 new Thread(() -> {
-                    try {
-                        setTitle(DatabaseLoader.getDbInstance(StepListActivity.this).recipesDao().getRecipe(recipeId).name);
-                    } catch (Exception e) {
-                        Log.e(StepListActivity.this.getClass().toString(), "Database error: " + e.getMessage());
-                        Toast.makeText(StepListActivity.this, getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+                    Recipe recipe = DatabaseUtil.lookupRecipe(DatabaseLoader.getDbInstance(StepListActivity.this), recipeId);
+                    if (recipe != null)
+                        handler.post(() -> setTitle(recipe.name));
+                    else {
+                        handler.post(() -> Toast.makeText(StepListActivity.this, getString(R.string.error_database), Toast.LENGTH_SHORT).show());
                         finish();
                     }
                 }).start();

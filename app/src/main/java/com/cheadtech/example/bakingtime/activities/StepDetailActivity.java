@@ -1,6 +1,7 @@
 package com.cheadtech.example.bakingtime.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import com.cheadtech.example.bakingtime.R;
 import com.cheadtech.example.bakingtime.models.Recipe;
 
 public class StepDetailActivity extends AppCompatActivity {
+    private final String tag = getClass().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,21 +23,18 @@ public class StepDetailActivity extends AppCompatActivity {
             Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
             if (recipe != null) {
                 setTitle(recipe.name);
-            } else {
-                Toast.makeText(this, getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-                finish();
+                return;
             }
-        } else {
-            Toast.makeText(this, getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
-            finish();
         }
+        Log.e(tag, "Error loading intent extras");
+        Toast.makeText(this, getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home)
             NavUtils.navigateUpFromSameTask(this);
-        }
         return super.onOptionsItemSelected(item);
     }
 }

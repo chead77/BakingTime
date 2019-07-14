@@ -7,13 +7,13 @@ import android.os.Parcelable;
 public class Ingredient implements Parcelable {
     public Ingredient() {}
 
-    public Ingredient(double quantity, String measure, String ingredient) {
+    public Ingredient(Float quantity, String measure, String ingredient) {
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
     }
 
-    public Double quantity;
+    public Float quantity;
     public String measure;
     public String ingredient;
 
@@ -21,7 +21,7 @@ public class Ingredient implements Parcelable {
         if (in.readByte() == 0) {
             quantity = null;
         } else {
-            quantity = in.readDouble();
+            quantity = in.readFloat();
         }
         measure = in.readString();
         ingredient = in.readString();
@@ -48,7 +48,7 @@ public class Ingredient implements Parcelable {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
-            parcel.writeDouble(quantity);
+            parcel.writeFloat(quantity);
         }
         parcel.writeString(measure);
         parcel.writeString(ingredient);

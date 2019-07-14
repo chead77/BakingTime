@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <service
+            android:name=".services.BakingTimeIntentService"
+            android:exported="false"/>
 
         <receiver android:name=".widgets.BakingTimeWidgetProvider">
             <intent-filter>
@@ -31,18 +34,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.StepListActivity"
             android:parentActivityName=".activities.RecipeListActivity" />
-
         <activity
             android:name=".activities.StepDetailActivity"
             android:parentActivityName=".activities.StepListActivity" />
 
-        <service android:name=".widgets.GridWidgetService"
+        <service
+            android:name=".widgets.GridWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
     </application>
 
 </manifest>

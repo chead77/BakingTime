@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"unused"})
 public class Recipe implements Parcelable {
     public Recipe() {}
 
