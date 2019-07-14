@@ -30,8 +30,6 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
         RemoteViews views;
 
         if (recipes != null && recipes.size() > 0) {
-            Log.e(logTag, recipes.size() + " recipes loaded to widget id " + appWidgetId); // TODO - remove or change to debug
-
             Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
             int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
             if (width < 200)
@@ -39,7 +37,7 @@ public class BakingTimeWidgetProvider extends AppWidgetProvider {
             else
                 views = getRecipesGridRemoteView(context);
         } else {
-            Log.e(logTag, "No recipes found"); // TODO - remove or change to warning
+            Log.w(logTag, "No recipes found");
             views = getSingleImageRemoteView(context);
         }
 
