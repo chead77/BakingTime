@@ -25,10 +25,6 @@ public interface RecipesDao {
     @Query("SELECT * FROM recipes ORDER BY id")
     LiveData<List<RecipeModel>> getAllRecipesWithListsLiveData();
 
-    @Transaction
-    @Query("SELECT * FROM recipes WHERE id = :recipeId")
-    RecipeModel getRecipeWithLists(Integer recipeId);
-
     @Insert
     void insertAll(List<RecipeEntity> recipes);
 

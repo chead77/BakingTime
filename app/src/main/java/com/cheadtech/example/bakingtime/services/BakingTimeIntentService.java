@@ -15,7 +15,7 @@ import com.cheadtech.example.bakingtime.widgets.BakingTimeWidgetProvider;
 public class BakingTimeIntentService extends IntentService {
     private static final String logTag = BakingTimeIntentService.class.getSimpleName();
 
-    public static final String ACTION_UPDATE_WIDGETS = "com.cheadtech.example.bakingtime.services.action.UPDATE_WIDGET";
+    private static final String ACTION_UPDATE_WIDGETS = "com.cheadtech.example.bakingtime.services.action.UPDATE_WIDGET";
 
     public BakingTimeIntentService() {
         super("BakingTimeIntentService");

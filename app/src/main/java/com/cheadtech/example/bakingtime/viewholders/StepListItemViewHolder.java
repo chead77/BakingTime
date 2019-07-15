@@ -16,6 +16,6 @@ public class StepListItemViewHolder extends RecyclerView.ViewHolder {
         stepDescriptionTV = itemView.findViewById(R.id.step_description);
     }
 
-    public MaterialCardView stepCard;
-    public TextView stepDescriptionTV;
+    public final MaterialCardView stepCard;
+    public final TextView stepDescriptionTV;
 }

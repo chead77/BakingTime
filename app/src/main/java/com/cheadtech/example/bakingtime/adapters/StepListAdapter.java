@@ -21,7 +21,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder
         this.callback = callback;
     }
 
-    private ArrayList<Step> dataSet = new ArrayList<>();
+    private final ArrayList<Step> dataSet = new ArrayList<>();
     private void setData(ArrayList<Step> steps) {
         dataSet.clear();
         dataSet.addAll(steps);
@@ -31,7 +31,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder
     public interface StepListAdapterCallback {
         void onStepClicked(Integer stepPosition);
     }
-    private StepListAdapterCallback callback;
+    private final StepListAdapterCallback callback;
 
     @NonNull
     @Override

@@ -36,7 +36,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListItemViewHo
     public interface RecipeListAdapterCallback {
         void onRecipeClicked(Recipe recipe);
     }
-    private RecipeListAdapterCallback callback;
+    private final RecipeListAdapterCallback callback;
 
     @NonNull
     @Override

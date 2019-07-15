@@ -118,43 +118,6 @@ public class DatabaseUtil {
         }
     }
 
-    @Nullable
-    public static Recipe lookupRecipe(@NonNull BakingTimeDB db, int recipeId) {
-        try {
-            RecipeModel dbRecipe = db.recipesDao().getRecipeWithLists(recipeId);
-
-            Recipe recipe = new Recipe();
-            recipe.id = dbRecipe.recipe.id;
-            recipe.name = dbRecipe.recipe.name;
-            recipe.servings = dbRecipe.recipe.servings;
-            recipe.image = dbRecipe.recipe.image;
-            recipe.ingredients = new ArrayList<>();
-            recipe.ingredients = new ArrayList<>();
-            for (IngredientsEntity dbIngredient : dbRecipe.ingredients) {
-                Ingredient ingredient = new Ingredient();
-                ingredient.quantity = dbIngredient.quantity;
-                ingredient.measure = dbIngredient.measure;
-                ingredient.ingredient = dbIngredient.ingredient;
-                recipe.ingredients.add(ingredient);
-            }
-            recipe.steps = new ArrayList<>();
-            for (StepsEntity dbStep : dbRecipe.steps) {
-                Step step = new Step();
-                step.id = dbStep.stepId;
-                step.shortDescription = dbStep.shortDescription;
-                step.description = dbStep.description;
-                step.thumbnailURL = dbStep.thumbnailUrl;
-                step.videoURL = dbStep.videoUrl;
-                recipe.steps.add(step);
-            }
-
-            return recipe;
-        } catch (Exception e) {
-            Log.e(logTag, "lookupRecipe() - DB error: " + e.getMessage());
-            return null;
-        }
-    }
-
     public static ArrayList<Recipe> processRecipeModels(List<RecipeModel> recipeModels) {
         if (recipeModels == null || recipeModels.size() < 1) {
             return null;

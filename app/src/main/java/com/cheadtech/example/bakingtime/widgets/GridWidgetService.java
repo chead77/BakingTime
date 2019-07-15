@@ -1,6 +1,5 @@
 package com.cheadtech.example.bakingtime.widgets;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +10,6 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.cheadtech.example.bakingtime.R;
-import com.cheadtech.example.bakingtime.activities.RecipeDetailActivity;
-import com.cheadtech.example.bakingtime.activities.RecipeListActivity;
 import com.cheadtech.example.bakingtime.database.DatabaseLoader;
 import com.cheadtech.example.bakingtime.database.DatabaseUtil;
 import com.cheadtech.example.bakingtime.models.Ingredient;
@@ -28,7 +25,7 @@ public class GridWidgetService extends RemoteViewsService {
 }
 
 class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private Context context;
+    private final Context context;
 
     private final ArrayList<Recipe> dataSet = new ArrayList<>();
 

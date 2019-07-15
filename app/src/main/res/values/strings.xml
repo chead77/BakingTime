@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Baking Time</string>
-    <string name="ingredients_list">Ingredients:\n%1$d</string>
     <string name="ingredients_label">Ingredients</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
-    <string name="no_recipes_found">No Recipes Found</string>
 
     <!-- content descriptions -->
     <string name="recipe_thumbnail_content_description">Recipe thumbnail</string>
@@ -15,7 +13,6 @@
     <string name="extra_selected_step_index" translatable="false">extra_recipe_step</string>
     <string name="app_db_name" translatable="false">baking_time_db</string>
     <string name="measure_unit" translatable="false">UNIT</string>
-    <string name="extra_two_pane" translatable="false">EXTRA_TWO_PANE</string>
 
     <!-- UI Error messages -->
     <string name="error_video_playback_error">Error playing video.\nPlease try again.</string>

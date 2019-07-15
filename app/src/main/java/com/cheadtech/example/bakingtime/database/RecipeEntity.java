@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "recipes")
-public class RecipeEntity {
+class RecipeEntity {
     @PrimaryKey
     public Integer id;
 

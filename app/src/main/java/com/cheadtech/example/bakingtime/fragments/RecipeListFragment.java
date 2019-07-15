@@ -2,7 +2,6 @@ package com.cheadtech.example.bakingtime.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,7 @@ import com.cheadtech.example.bakingtime.viewmodels.RecipeListViewModel;
 
 import java.util.ArrayList;
 
-public class RecipeListFragment extends Fragment {
-    private static final String logTag = RecipeListFragment.class.getSimpleName();
-
+class RecipeListFragment extends Fragment {
     private RecyclerView recipeListRV;
 
     private RecipeListViewModel viewModel;

@@ -1,6 +1,5 @@
 package com.cheadtech.example.bakingtime.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cheadtech.example.bakingtime.R;
-import com.cheadtech.example.bakingtime.activities.StepDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.StepListAdapter;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
@@ -32,7 +30,6 @@ public class RecipeDetailFragment extends Fragment {
     private static final String logTag = RecipeDetailFragment.class.getSimpleName();
 
     private TextView ingredientsTV;
-    private RecyclerView stepsRV;
 
     private Recipe recipe;
 
@@ -64,7 +61,7 @@ public class RecipeDetailFragment extends Fragment {
         recipe = extras.getParcelable(getString(R.string.extra_recipe));
 
         ingredientsTV = view.findViewById(R.id.ingredients_tv);
-        stepsRV = view.findViewById(R.id.steps_rv);
+        RecyclerView stepsRV = view.findViewById(R.id.steps_rv);
         if (ingredientsTV == null || stepsRV == null || recipe == null) {
             Log.w(logTag, "One or more views is null, or invalid recipe ID");
             getActivity().finish();

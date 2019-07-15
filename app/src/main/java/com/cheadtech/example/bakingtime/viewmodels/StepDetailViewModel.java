@@ -32,12 +32,6 @@ public class StepDetailViewModel extends ViewModel {
 
     private Recipe recipe;
     private int currentRecipeStepPosition = -1;
-    public boolean setCurrentRecipeStepPosition(int position) {
-        if (position < 0 || position >= recipe.steps.size())
-            return false;
-
-        return true;
-    }
 
     public final MutableLiveData<String> videoUrlLiveData = new MutableLiveData<>();
     public final MutableLiveData<Boolean> previousEnabledLiveData = new MutableLiveData<>();
