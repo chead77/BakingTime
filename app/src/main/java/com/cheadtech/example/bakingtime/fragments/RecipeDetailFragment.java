@@ -23,6 +23,7 @@ import com.cheadtech.example.bakingtime.activities.StepDetailActivity;
 import com.cheadtech.example.bakingtime.adapters.StepListAdapter;
 import com.cheadtech.example.bakingtime.models.Ingredient;
 import com.cheadtech.example.bakingtime.models.Recipe;
+import com.cheadtech.example.bakingtime.util.StepSelectionInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +36,15 @@ public class RecipeDetailFragment extends Fragment {
 
     private Recipe recipe;
 
+    private StepSelectionInterface stepSelectionCallback;
+    public void setStepSelectionCallback(StepSelectionInterface callback) {
+        stepSelectionCallback = callback;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.step_list_fragment, container, false);
+        return inflater.inflate(R.layout.recipe_detail_fragment, container, false);
     }
 
     @Override
@@ -66,7 +72,8 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         populateIngredients();
-        populateSteps();
+        stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps),
+                selectedStepPosition -> stepSelectionCallback.onSelectedStepChanged(selectedStepPosition)));
 
         // The top-level ScrollView starts out scrolled past the ingredient card. The following code corrects for this.
         NestedScrollView scrollView = view.findViewById(R.id.step_list_scroller);
@@ -102,15 +109,5 @@ public class RecipeDetailFragment extends Fragment {
                 quantity = quantity.substring(0, quantity.length() - 1);
         }
         return quantity;
-    }
-
-    private void populateSteps() {
-        stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps), stepPosition -> {
-            // TODO - load step detail fragment if on a tablet???
-            Intent intent = new Intent(getContext(), StepDetailActivity.class);
-            intent.putExtra(getString(R.string.extra_recipe), recipe);
-            intent.putExtra(getString(R.string.extra_recipe_step), stepPosition);
-            startActivity(intent);
-        }));
     }
 }

@@ -70,7 +70,7 @@ public class StepDetailFragment extends Fragment {
         }
 
         Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
-        int currentRecipeStepPosition = extras.getInt(getString(R.string.extra_recipe_step), -1);
+        int currentRecipeStepPosition = extras.getInt(getString(R.string.extra_selected_step_index), -1);
         if (recipe == null || currentRecipeStepPosition == -1) {
             Log.e(tag, "Recipe or current recipe step position not found in intent Extras");
             Toast.makeText(requireContext(), getString(R.string.error_please_try_again), Toast.LENGTH_SHORT).show();
@@ -129,7 +129,8 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        viewModel.pausePlayback(playerView.getPlayer().getPlayWhenReady());
+        if (playerView != null && playerView.getPlayer() != null)
+            viewModel.pausePlayback(playerView.getPlayer().getPlayWhenReady());
     }
 
     private void showPlayer() {

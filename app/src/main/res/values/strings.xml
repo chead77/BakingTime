@@ -12,9 +12,10 @@
 
     <!-- string constants, not for translation -->
     <string name="extra_recipe" translatable="false">extra_recipe</string>
-    <string name="extra_recipe_step" translatable="false">extra_recipe_step</string>
+    <string name="extra_selected_step_index" translatable="false">extra_recipe_step</string>
     <string name="app_db_name" translatable="false">baking_time_db</string>
     <string name="measure_unit" translatable="false">UNIT</string>
+    <string name="extra_two_pane" translatable="false">EXTRA_TWO_PANE</string>
 
     <!-- UI Error messages -->
     <string name="error_video_playback_error">Error playing video.\nPlease try again.</string>

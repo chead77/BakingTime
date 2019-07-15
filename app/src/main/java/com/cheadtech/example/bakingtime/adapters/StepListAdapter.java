@@ -14,6 +14,8 @@ import com.cheadtech.example.bakingtime.viewholders.StepListItemViewHolder;
 import java.util.ArrayList;
 
 public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder> {
+    private int selectedPosition = 0;
+
     public StepListAdapter(ArrayList<Step> steps, StepListAdapterCallback callback) {
         setData(steps);
         this.callback = callback;
@@ -41,9 +43,19 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListItemViewHolder
     @Override
     public void onBindViewHolder(@NonNull final StepListItemViewHolder holder, int position) {
         if (holder.stepCard != null && holder.stepDescriptionTV != null) {
+            if (selectedPosition == holder.getAdapterPosition()) {
+                holder.stepCard.setBackgroundColor(holder.stepCard.getResources().getColor(R.color.colorPrimary, null));
+            } else {
+                holder.stepCard.setBackgroundColor(holder.stepCard.getResources().getColor(R.color.colorPrimaryDark, null));
+            }
+
             final Step step = dataSet.get(holder.getAdapterPosition());
             holder.stepDescriptionTV.setText(step.shortDescription);
-            holder.stepCard.setOnClickListener(view -> callback.onStepClicked(position));
+            holder.stepCard.setOnClickListener(view -> {
+                selectedPosition = holder.getAdapterPosition();
+                callback.onStepClicked(holder.getAdapterPosition());
+                notifyDataSetChanged();
+            });
         }
     }
 

@@ -38,6 +38,7 @@
             android:background="@color/colorAccent"
             android:gravity="center"
             android:numColumns="1"
+            android:padding="4dp"
             />
 
         <RelativeLayout
