@@ -7,8 +7,7 @@
     android:id="@+id/recipe_widget_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="148dp"
-    android:layout_marginTop="8dp"
+    android:layout_margin="4dp"
     app:cardCornerRadius="5dp"
     >
 
@@ -25,7 +24,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="0"
             />
 
@@ -35,20 +34,18 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name_tv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/recipe_image_iv"
-            />
-
-        <ImageView
-            android:id="@+id/recipe_image_iv"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:contentDescription="@string/recipe_thumbnail_content_description"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/name_tv"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/recipe_image_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/recipe_thumbnail_content_description"
+        android:alpha="0.2"
+        android:background="@color/colorPrimaryDark"
+        />
 
 </com.google.android.material.card.MaterialCardView>

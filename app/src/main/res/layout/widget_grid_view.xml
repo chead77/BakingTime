@@ -31,11 +31,17 @@
         android:layout_height="match_parent"
         >
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:alpha="0.7"
+            />
+
         <GridView
             android:id="@+id/recipes_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
             android:gravity="center"
             android:numColumns="1"
             android:padding="4dp"
@@ -45,6 +51,7 @@
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alpha="0.2"
             >
 
             <ImageView
@@ -54,8 +61,6 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/please_wait_content_description"
                 android:scaleType="fitCenter"
-                android:background="@color/colorPrimaryDark"
-                android:alpha="0.2"
                 />
 
         </RelativeLayout>

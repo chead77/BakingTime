@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cheadtech.example.bakingtime.R;
@@ -44,13 +45,18 @@ public class RecipeListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         recipeListRV = view.findViewById(R.id.recipe_list_rv);
-        if (recipeListRV == null) {
-            Log.e(logTag, "Error loading view");
-            return;
+        if (recipeListRV != null) {
+            recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe ->
+                    startActivity(new Intent(requireContext(), RecipeDetailActivity.class)
+                            .putExtra(getString(R.string.extra_recipe), recipe))));
+
+            if (getResources().getBoolean(R.bool.tablet_format)) {
+                GridLayoutManager layoutManager = (GridLayoutManager) recipeListRV.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.setSpanCount(3);
+                }
+            }
         }
-        recipeListRV.setAdapter(new RecipeListAdapter(new ArrayList<>(), recipe ->
-                startActivity(new Intent(requireContext(), RecipeDetailActivity.class)
-                        .putExtra(getString(R.string.extra_recipe), recipe))));
 
         initViewModel();
 

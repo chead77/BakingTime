@@ -73,7 +73,8 @@ public class RecipeDetailFragment extends Fragment {
 
         populateIngredients();
         stepsRV.setAdapter(new StepListAdapter(new ArrayList<>(recipe.steps),
-                selectedStepPosition -> stepSelectionCallback.onSelectedStepChanged(selectedStepPosition)));
+                selectedStepPosition ->
+                        stepSelectionCallback.onSelectedStepChanged(selectedStepPosition)));
 
         // The top-level ScrollView starts out scrolled past the ingredient card. The following code corrects for this.
         NestedScrollView scrollView = view.findViewById(R.id.step_list_scroller);

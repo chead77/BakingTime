@@ -38,17 +38,16 @@ public class RecipeDetailActivity extends AppCompatActivity implements StepSelec
         Recipe recipe = extras.getParcelable(getString(R.string.extra_recipe));
         if (recipe != null) setTitle(recipe.name);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        RecipeDetailFragment recipeDetailFragment =
+                (RecipeDetailFragment) fragmentManager.findFragmentById(R.id.recipe_detail_fragment);
+        if (recipeDetailFragment != null)
+            recipeDetailFragment.setStepSelectionCallback(this);
+
         // tablet code
         if (getResources().getBoolean(R.bool.tablet_format)) {
             if (savedInstanceState == null) {
                 getIntent().putExtra(getString(R.string.extra_selected_step_index), 0);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
-                RecipeDetailFragment recipeDetailFragment =
-                        (RecipeDetailFragment) fragmentManager.findFragmentById(R.id.recipe_detail_fragment);
-                if (recipeDetailFragment != null)
-                    recipeDetailFragment.setStepSelectionCallback(this);
-
                 StepDetailFragment stepDetailFragment = new StepDetailFragment();
                 View view = stepDetailFragment.getView();
                 if (view != null && view.findViewById(R.id.step_navigation) != null)
